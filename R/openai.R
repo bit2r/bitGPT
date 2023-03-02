@@ -11,7 +11,9 @@
 #' "image"는 이미지 파일을 생성합니다.
 #' @param format character. 이미지 파일의 포맷으로 type의 값이 "file"일 경우만 적용됨.
 #' "png", "jpeg", "gif"에서 선택하며, 기본값은 "png"임.
-#' @param path character. 경로를 포함한 이미지 파일의 이름으로 type의 값이 "file"일 경우만 적용됨.
+#' @param path character. 파일을 생성할 디렉토리 경로로 type의 값이 "file"일 경우만 적용됨.
+#' @param fname character. 경로와 확장자를 제외한 이미지 파일의 이름으로,
+#' type의 값이 "file"일 경우만 적용됨.
 #' @param openai_api_key character. openai의 API key.
 #' @details openai의 프롬프트를 한글로 만들 경우에는 결과의 성능이 매우 낮기 때문에,
 #' 한글 프롬프트의 경우에는 ko2en를 TRUE로 지정하기 바랍니다.
@@ -36,11 +38,18 @@ draw_img <- function(prompt, ko2en = TRUE, n = 1L,
                      size = c("1024x1024", "256x256", "512x512"),
                      type = c("url", "image", "file"),
                      format = c("png", "jpeg", "gif"),
-                     path = paste("aidrawing", format, sep = "."),
+                     path = "./", fname = "aidrawing",
                      openai_api_key = Sys.getenv("OPENAI_API_KEY")) {
   size <- match.arg(size)
   type <- match.arg(type)
   format <- match.arg(format)
+
+  if (n == 1) {
+    path <- glue::glue("{path}/{fname}.{format}")
+  } else {
+    path <- paste(paste(glue::glue("{path}/{fname}"),
+                        sprintf("%02d", 1:n), sep = "_"), format, sep = ".")
+  }
 
   if (ko2en) {
     prompt <- translate(prompt)
@@ -53,12 +62,31 @@ draw_img <- function(prompt, ko2en = TRUE, n = 1L,
     openai_api_key = openai_api_key
   )
 
+  img_url <- response$data$url
+
   if (type %in% "url") {
-    return(response$data$url)
+    return(img_url)
   } else if (type %in% "image") {
-    return(magick::image_read(response$data$url))
+    img_url %>%
+      purrr::walk(
+        function(x) {
+          img <- magick::image_read(x)
+
+          par(mar = c(0, 0, 0, 0))
+          plot(as.raster(img))
+        }
+      )
   } else if (type %in% "file") {
-    img <- magick::image_read(response$data$url)
-    magick::image_write(img, path = path, format = format)
+    img_url %>%
+      length() %>%
+      seq() %>%
+      purrr::walk(
+        function(x) {
+          img <- magick::image_read(img_url[x])
+          magick::image_write(img, path = path[x], format = format)
+        }
+      )
+
   }
 }
+

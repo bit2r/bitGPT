@@ -11,7 +11,8 @@ draw_img(
   size = c("1024x1024", "256x256", "512x512"),
   type = c("url", "image", "file"),
   format = c("png", "jpeg", "gif"),
-  path = paste("aidrawing", format, sep = "."),
+  path = "./",
+  fname = "aidrawing",
   openai_api_key = Sys.getenv("OPENAI_API_KEY")
 )
 }
@@ -33,7 +34,10 @@ TRUE이면 한글 프롬프트를 영어로 번역하여 프롬프트를 질의�
 \item{format}{character. 이미지 파일의 포맷으로 type의 값이 "file"일 경우만 적용됨.
 "png", "jpeg", "gif"에서 선택하며, 기본값은 "png"임.}
 
-\item{path}{character. 경로를 포함한 이미지 파일의 이름으로 type의 값이 "file"일 경우만 적용됨.}
+\item{path}{character. 파일을 생성할 디렉토리 경로로 type의 값이 "file"일 경우만 적용됨.}
+
+\item{fname}{character. 경로와 확장자를 제외한 이미지 파일의 이름으로,
+type의 값이 "file"일 경우만 적용됨.}
 
 \item{openai_api_key}{character. openai의 API key.}
 }
