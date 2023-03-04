@@ -1,3 +1,11 @@
+# bitSpatial 0.0.2.9000
+
+## NEW FEATURES
+
+* chatGPT를 이용한 이미지 변형. (#6). 
+
+
+
 # bitSpatial 0.0.1.9001
 
 ## NEW FEATURES
