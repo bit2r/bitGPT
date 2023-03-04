@@ -1,3 +1,11 @@
+# bitSpatial 0.1.0.9000
+
+## NEW FEATURES
+
+* chatGPT를 이용한 Speech to Text. (#7). 
+
+
+
 # bitSpatial 0.0.2.9000
 
 ## NEW FEATURES
