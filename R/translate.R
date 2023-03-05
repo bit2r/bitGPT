@@ -3,8 +3,8 @@
 #' @param text character. 번역할 텍스트.
 #' @param source character. 번역할 텍스트 언어의 언어 코드. 기본값은 "ko"로 한국어를 번역함.
 #' @param target character. 번역될 언어의 언어 코드. 기본값은 "en"로 영어로 번역함.
-#' @param client_id character. 등록할 API key의 client ID.
-#' @param client_secret character. 등록할 API key의 client Secret.
+#' @param client_id character. Naver 파파고 API key의 client ID.
+#' @param client_secret character. Naver 파파고 API key의 client Secret.
 #' @details 지원되는 언어와 언어 코드는 https://developers.naver.com/docs/papago/papago-nmt-api-reference.md를 참고하세요.
 #' @examples
 #' \dontrun{

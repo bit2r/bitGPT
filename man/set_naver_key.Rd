@@ -21,6 +21,6 @@ set_naver_key() 대신에 매번 API key를 등록할 필요없는 regist_naver_
 \examples{
 \dontrun{
 # 실제 사용자가 할당받은 Naver API key를 사용합니다.
-# set_naver_key()
+# set_naver_key(client_id = "XXXXXXXXXXX", client_secret = "XXXXXXXXXXX")
 }
 }

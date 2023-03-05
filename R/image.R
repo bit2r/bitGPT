@@ -131,7 +131,7 @@ draw_img <- function(prompt, ko2en = TRUE, n = 1L,
 #' @export
 #' @importFrom openai create_image_variation
 #' @importFrom magick image_read image_write
-draw_img_variation <- function(image, ko2en = TRUE, n = 1L,
+draw_img_variation <- function(image, n = 1L,
                                size = c("1024x1024", "256x256", "512x512"),
                                type = c("url", "image", "file"),
                                format = c("png", "jpeg", "gif"),

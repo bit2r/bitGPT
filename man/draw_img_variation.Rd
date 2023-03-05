@@ -6,7 +6,6 @@
 \usage{
 draw_img_variation(
   image,
-  ko2en = TRUE,
   n = 1L,
   size = c("1024x1024", "256x256", "512x512"),
   type = c("url", "image", "file"),

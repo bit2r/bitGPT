@@ -19,9 +19,9 @@ translate(
 
 \item{target}{character. 번역될 언어의 언어 코드. 기본값은 "en"로 영어로 번역함.}
 
-\item{client_id}{character. 등록할 API key의 client ID.}
+\item{client_id}{character. Naver 파파고 API key의 client ID.}
 
-\item{client_secret}{character. 등록할 API key의 client Secret.}
+\item{client_secret}{character. Naver 파파고 API key의 client Secret.}
 }
 \description{
 Naver 파파고 번역 API를 이용해서 텍스트의 번역을 수행합니다.

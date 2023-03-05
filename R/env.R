@@ -84,7 +84,7 @@ set_openai_key <- function(api_key = NULL) {
 #' @examples
 #' \dontrun{
 #' # 실제 사용자가 할당받은 Naver API key를 사용합니다.
-#' # set_naver_key()
+#' # set_naver_key(client_id = "XXXXXXXXXXX", client_secret = "XXXXXXXXXXX")
 #' }
 #' @export
 set_naver_key <- function(client_id = NULL, client_secret = NULL) {
