@@ -291,8 +291,7 @@ transcript_audio(
     mp3, mp4, mpeg, mpga, m4a, wav, webm중 하나만 허용합니다.
 - language
   - character. 음성 오디오 파일의 언어로 ISO-639-1 포맷으로 지정해야
-    하며, 기본값은 한국어인 “ko”입니다. 영어를 제외한 다국어 음성파일을
-    지원합니다.
+    하며, 기본값은 한국어인 “ko”입니다. 다국어 음성파일을 지원합니다.
 - openai_api_key
   - character. OpenAI API key입니다. 만약 `regist_openai_key()`,
     `sett_openai_key()`로 API key를 설정했다면 이 인수값을 지정할
