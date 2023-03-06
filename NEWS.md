@@ -1,4 +1,13 @@
-# bitSpatial 0.1.0.9000
+# bitGPT 0.2.0.9000
+
+## NEW FEATURES
+
+* chatGPT를 이용한 chat completion. (#9). 
+    - chat_completion()
+    
+    
+    
+# bitGPT 0.1.0.9000
 
 ## NEW FEATURES
 
@@ -6,7 +15,7 @@
     - transcript_audio()
 
 
-# bitSpatial 0.0.2.
+# bitGPT 0.0.2.
 
 ## NEW FEATURES
 
@@ -15,7 +24,7 @@
     
 
 
-# bitSpatial 0.0.1.
+# bitGPT 0.0.1.
 
 ## NEW FEATURES
 
