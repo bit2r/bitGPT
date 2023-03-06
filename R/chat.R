@@ -13,12 +13,16 @@
 #' 일반적으로 이 값이나 temperature를 변경하는 것을 권장하지만 둘 다 변경하는 것은 권장하지 않음.
 #' @param type character. 반환하는 결과 타입. "text", "console", "viewer"에서 선택하며,
 #' 기본값인 "text"는 텍스트를, "console"는 R 콘솔에 프린트 아웃되며,
-#' "viewer"는 HTML 포맷으로 브라우저에 출력됨.
+#' "viewer"는 HTML 포맷으로 브라우저에 출력됨. 만약 결과에 R 코드가 chunk로 포함되어 있다면,
+#' 코드가 실행된 결과도 HTML 문서에 포함됨
+#' @details type 인수가 "viewer"일 경우에 질의 결과에 R 코드가 포함되어 있다고 모두 수행되는 것은 아님.
+#' R 코드가 chunk로 포함되어 있을 경우에만, 해당 chunk의 R 코드가 실행되며,
+#' 어쩌면 불완전한 코드로 인해서 에러가 발생할 수도 있음.
 #' @param openai_api_key character. openai의 API key.
 #' @examples
 #' \dontrun{
 #' # 텍스트로 반환
-#' messages <- "mtcars 데이터를 ggplot2 패키지로 EDA하는 R 스크립트를 짜줘."
+#' messages <- "mtcars 데이터를 ggplot2 패키지로 wt 변수와 mpg 변수를 EDA하는 R 스크립트를 짜줘."
 #' chat_completion(messages)
 #'
 #' # R 콘솔에 프린트 아웃
@@ -34,6 +38,7 @@
 #' @importFrom jsonlite fromJSON
 #' @importFrom knitr knit2html
 #' @importFrom utils browseURL
+#' @importFrom stringr str_replace_all
 chat_completion <- function(messages = NULL,
                             model = c("gpt-3.5-turbo", "gpt-3.5-turbo-0301"),
                             temperature = 1, top_p = 1,
@@ -141,18 +146,29 @@ chat_completion <- function(messages = NULL,
   }
 
   answer <- parsed$choices$message.content
+  answer <<- answer
 
   if (type %in% "text") {
     return(answer)
   } else   if (type %in% "console") {
     cat(answer)
   } else   if (type %in% "viewer") {
-    cat(glue::glue("Question\n\n<p><span style='font-weight: bold; font-size:15px; color:orange'>{messages}</span></p>\n\nAnswer\n\n"), file = "answer.md")
-    cat(answer, file = "answer.md", append = TRUE)
-    knitr::knit2html("answer.md")
+    cat("---\n", file = "answer.Rmd")
+    cat("output: html_document\n", file = "answer.Rmd", append = TRUE)
+    cat("---\n\n", file = "answer.Rmd", append = TRUE)
+
+    cat(glue::glue("### Question\n\n<p><span style='font-weight: bold; font-size:15px; color:orange'>{messages}</span></p>\n\n### Answer\n\n"),
+        file = "answer.Rmd", append = TRUE)
+
+    # replace markdown chunk to R markdown chunk
+    stringr::str_replace_all(answer, "```r", "```{r}") %>%
+      cat(file = "answer.Rmd", append = TRUE)
+
+    knitr::knit2html("answer.Rmd")
     if (interactive()) utils::browseURL("answer.html")
+
+    unlink("answer.Rmd")
     unlink("answer.md")
-    unlink("answer.txt")
   }
 }
 

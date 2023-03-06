@@ -31,17 +31,23 @@ chat_completion(
 
 \item{type}{character. 반환하는 결과 타입. "text", "console", "viewer"에서 선택하며,
 기본값인 "text"는 텍스트를, "console"는 R 콘솔에 프린트 아웃되며,
-"viewer"는 HTML 포맷으로 브라우저에 출력됨.}
+"viewer"는 HTML 포맷으로 브라우저에 출력됨. 만약 결과에 R 코드가 chunk로 포함되어 있다면,
+코드가 실행된 결과도 HTML 문서에 포함됨}
 
 \item{openai_api_key}{character. openai의 API key.}
 }
 \description{
 chatGPT를 이용해서 Chat completion을 수행함.
 }
+\details{
+type 인수가 "viewer"일 경우에 질의 결과에 R 코드가 포함되어 있다고 모두 수행되는 것은 아님.
+R 코드가 chunk로 포함되어 있을 경우에만, 해당 chunk의 R 코드가 실행되며,
+어쩌면 불완전한 코드로 인해서 에러가 발생할 수도 있음.
+}
 \examples{
 \dontrun{
 # 텍스트로 반환
-messages <- "mtcars 데이터를 ggplot2 패키지로 EDA하는 R 스크립트를 짜줘."
+messages <- "mtcars 데이터를 ggplot2 패키지로 wt 변수와 mpg 변수를 EDA하는 R 스크립트를 짜줘."
 chat_completion(messages)
 
 # R 콘솔에 프린트 아웃
