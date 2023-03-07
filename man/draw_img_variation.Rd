@@ -48,7 +48,7 @@ chatGPT를 이용해서 변형된 이미지를 생성함.
 # 변형할 이미지
 image <- system.file("images", "cloud.png", package = "bitGPT")
 
-# 생성된 파일의 경로로소의 URL 반환
+# 생성된 파일의 경로로서의 URL 반환
 draw_img_variation(image)
 
 # 이미지를 반환
@@ -57,4 +57,7 @@ draw_img_variation(image, type = "image")
 # 파일로 출력
 draw_img_variation(image, type = "file")
 }
+}
+\seealso{
+\code{\link{draw_img}}, \code{\link{draw_img_edit}}
 }

@@ -2,6 +2,7 @@
 
 export(chat_completion)
 export(draw_img)
+export(draw_img_edit)
 export(draw_img_variation)
 export(get_api_key)
 export(regist_naver_key)

@@ -1,4 +1,13 @@
-# bitGPT 0.2.0.9000
+# bitGPT 0.2.1.9000
+
+## NEW FEATURES
+
+* chatGPT를 이용한 이미지 편집. (#11). 
+    - draw_img_edit()
+    
+    
+    
+# bitGPT 0.2.0.
 
 ## NEW FEATURES
 
