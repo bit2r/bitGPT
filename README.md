@@ -12,10 +12,14 @@ Features:
 - open API key를 관리 기능으로 인한 손쉬운 서비스 인터페이싱
   - OpenAI의 API key
   - Naver 파파고의 client ID와 secret
+- OpenAI의 채팅 자동 완성
 - OpenAI의 이미지 프로세싱
   - 이미지 생성
     - 영어 프롬프트와 한국어 프롬프트 지원
     - 한국어 프롬프트는 영어 프롬프트로 번역되어 질의
+  - 이미지 편집
+    - 영어 프롬프트와 한국어 프롬프트 지원
+    - 한국어 프롬프트는 영어 프롬프트로 번역되어 질의  
   - 이미지 변형
 - OpenAI의 STT(Speech to Text)
 - Naver 파파고의 텍스트 번역기
@@ -127,6 +131,152 @@ translate(text, "en", "ko")
 #> [1] "우리는 대화 방식으로 상호 작용하는 ChatGPT이라는 모델을 훈련시켰다. 대화 형식을 통해 ChatGPT는 후속 질문에 답변하고, 실수를 인정하며, 잘못된 전제에 도전하고, 부적절한 요청을 거부할 수 있습니다."
 ```
 
+## Chat completion
+
+### Create chat completion with chatGPT
+
+`chatGPT`를 이용해서, 생성할 이미지를 설명하는 프롬프트에 부합하는
+이미지를 생성할 수 있습니다.
+
+여러분은 다음의 `draw_img()`로 원하는 그림을 그리는 화가가 될 수
+있습니다.
+
+``` r
+chat_completion(
+  messages = NULL,
+  model = c("gpt-3.5-turbo", "gpt-3.5-turbo-0301"),
+  temperature = 1,
+  top_p = 1,
+  type = c("text", "console", "viewer"),
+  openai_api_key = Sys.getenv("OPENAI_API_KEY")
+)
+```
+
+- messages
+  - character. 채팅을 위한 메시지로 영문과 국문 모두 가능합니다.
+- model
+  - character. Chat completion에 사용할 OpenAI의 모델로,
+    “gpt-3.5-turbo”, “gpt-3.5-turbo-0301”에서 선택합니다. 기본값은
+    “gpt-3.5-turbo”입니다.
+- temperature
+  - numeric. 0에서 2 사이에서 사용할 샘플링 온도. 0.8과 같이 값이 높으면
+    출력이 더 무작위적이고, 0.2와 같이 값이 낮으면 더 집중적이고
+    결정론적인 출력이 됩니다. 일반적으로 이 값 또는 top_p를 변경하는
+    것이 좋지만 둘 다 변경하는 것은 권장하지 않습니다.
+- top_p
+  - numeric. 온도를 이용한 샘플링의 대안으로, 핵 샘플링이라고 하며,
+    모델이 상위_p 확률 질량을 가진 토큰의 결과를 고려합니다. 따라서
+    0.1은 상위 10% 확률 질량을 구성하는 토큰만 고려한다는 의미입니다.
+    일반적으로 이 값이나 temperature를 변경하는 것을 권장하지만 둘 다
+    변경하는 것은 권장하지 않습니다.
+- type
+  - character. 반환하는 결과 타입입니다. “text”, “console”, “viewer”에서
+    선택하며, 기본값인 “text”는 텍스트를, “console”는 R 콘솔에 프린트
+    아웃되며, “viewer”는 HTML 포맷으로 브라우저에 출력됩니다. 만약
+    결과에 R 코드가 chunk로 포함되어 있다면, 코드가 실행된 결과도 HTML
+    문서에 포함됩니다.
+- openai_api_key
+  - character. OpenAI API key입니다. 만약 `regist_openai_key()`,
+    `sett_openai_key()`로 API key를 설정했다면 이 인수값을 지정할
+    필요없습니다.
+
+**몇가지 방법으로의 채팅을 수행해 보겠습니다.**
+
+### type = “text”
+
+이 방법은 반환받은 텍스트 데이터를 사후에 가공하여 활용할 때 유용한
+방법입니다.
+
+``` r
+> chat_completion("R의 가장 큰 장점은 무엇일까?.", type = "text")
+[1] "\n\nR의 가장 큰 장점은 다양한 통계 분석 기능과 그래프 그리기 기능이 있다는 것입니다. 
+또한 R은 오픈소스 소프트웨어이므로 무료로 이용할 수 있으며, 데이터 전처리 및 분석에 있어서 다양한 패키지나 
+라이브러리를 제공하여 효과적인 해결책을 제공할 수 있습니다. 
+또한 R은 데이터 시각화에 강점을 가지고 있어, 데이터의 시각화 및 결과의 시각화가 수월합니다. 
+또한 R은 다양한 데이터 형태를 지원하므로, 대용량 데이터셋에서도 빠르게 처리할 수 있습니다. 
+따라서 R은 데이터 분석 분야에서 매우 유용한 도구이며, 통계분석 전문가 및 데이터 분석가들에게 필수적인 도구로 인식되고 있습니다."
+```
+
+### type = “console”
+
+이 방법은 `chatGPT`와 질문과 답변의 대화를 이어나갈 때 유용한
+방법입니다.
+
+``` r
+> chat_completion("안녕, 반가워.", type = "console")
+안녕하세요! 저는 AI 어시스턴트입니다. 무엇을 도와드릴까요?
+```
+
+``` r
+> chat_completion("네 이름은 뭐니?", type = "console")
+
+제 이름은 OpenAI Assistive입니다. 저는 OpenAI의 인공지능 어시스턴트입니다.
+```
+
+``` r
+> chat_completion("미세먼지가 많은 날은 어떻게 준비해야할까?", type = "console")
+
+
+미세먼지가 많은 날에는 다음과 같은 준비를 하면 좋습니다.
+
+1. 마스크 착용 : 미세먼지를 막기 위해 마스크를 착용해야 합니다. 미세먼지가 심한 날에는 KF94 등급 이상의 마스크를 선택해야 합니다.
+
+2. 실내 환기 방지 : 실내 공기를 집중적으로 정화하기 위해 창문, 문을 닫고 에어컨, 공기청정기를 돌리는 것이 좋습니다.
+
+3. 외출 제한 : 미세먼지 농도가 매우 높은 날에는 가능한 실내에서 활동을 하는 것이 좋으며, 외출이 필요한 경우에는 마스크를 꼭 착용해야 합니다.
+
+4. 적정한 수분 섭취 : 미세먼지로 인해 목이 건조해지는 경우가 많으므로, 충분한 수분을 섭취해 목을 적정한 상태로 유지해야 합니다.
+
+5. 눈 건강 보호 : 미세먼지는 눈에도 영향을 미칠 수 있으므로, 안경이나 눈을 보호할 수 있는 고글을 착용하는 것이 좋습니다. 두통, 결막염 등이 있는 경우 병원 선생님 상담을 권장합니다.
+```
+
+``` r
+> chat_completion("근의 공식을 설명해줘", type = "console")
+
+근의 공식은 다음과 같습니다.
+
+ax^2 + bx + c = 0 (a ≠ 0)라는 이차방정식이 주어졌을 때, 이 방정식의 근은 다음과 같은 공식을 이용하여 계산할 수 있습니다.
+
+x = (-b ± √(b^2 - 4ac)) / 2a
+
+여기에서,
+
+- b는 이차항의 계수이며, x에 곱해진 계수의 합을 의미합니다.
+- a는 이차항의 계수입니다.
+- c는 상수항의 값입니다.
+- √는 루트 기호를 나타냅니다.
+- ±는 양수와 음수를 의미하는데, 이는 두 개의 식이 나올 수 있음을 나타냅니다.
+
+이 공식을 이용하여 이차방정식의 근을 쉽게 구할 수 있습니다. 하지만 이 공식은 근의 개수에 따라 근의 실수, 허수, 중근 등으로 나눠져 있기 때문에 근을 구하기 전에 해당 방정식의 근의 개수가 어떤지 판별해야 합니다.
+```
+
+``` r
+> chat_completion("피타고라스의 정리는 무엇이지?", type = "console")
+
+피타고라스의 정리는 직각삼각형에서 빗변의 제곱이 나머지 두 변의 제곱의 합과 같다는 정리이다. 즉, $a^2+b^2=c^2$로 표현된다. 이러한 정리는 수학뿐만 아니라 공학, 물리학 등 다양한 분야에서 활용된다.
+```
+
+### type = “viewer”
+
+이 방법은 답변의 결과에 R 코드가 포함되어 있을 때 유용합니다. 반환된
+결과를 R 마크다운으로 수행하여 HTML로 만든 후 브라우저에 띄워줍니다.
+
+다만, 경우에 따라서 답변의 결과 포함된 R 코드가 실행 중에 에러가 발생할
+수 있는 불완전한 Pseudo 코드일 수 있습니다.
+
+``` r
+messages <- "mtcars 데이터를 ggplot2 패키지로 wt 변수와 mpg 변수를 EDA하는 R 스크립트를 짜줘."
+
+# HTML 포맷으로 브라우저에 출력
+chat_completion(messages, type = "viewer")
+```
+
+<figure>
+<img src="man/figures/chat_down.png" style="width:80.0%"
+alt="결과의 HTML 프라우징 화면" />
+<figcaption aria-hidden="true">결과의 HTML 프라우징 화면</figcaption>
+</figure>
+
 ## Image processing
 
 ### Create image with chatGPT
@@ -223,6 +373,112 @@ alt="고흐풍 드로잉" />
 <img src="man/figures/aidrawing.png" style="width:60.0%;height:60.0%"
 alt="고흐풍 드로잉" />
 
+### Edit image with chatGPT
+
+`chatGPT`를 이용해서, 이미지를 편집할 수 있습니다.
+
+여러분은 다음의 `draw_img_edit()`로 원하는 이미지의 특정 부분을 퍈집할
+수 있습니다. 함수의 인수는 `draw_img_variation()`와 거의 유사합니다.
+`image` 인수에 편집할 원래의 이미지 파일을, mask에 편집할 부분을
+선택하는(mask) 이미지 파일을 지정하면 됩니다. 그리고 prompt에는 편집할
+부분의 편집 내용을 기술합니다.
+
+``` r
+draw_img_edit(
+  image,
+  mask,
+  prompt,
+  ko2en = TRUE,
+  n = 1L,
+  size = c("1024x1024", "256x256", "512x512"),
+  type = c("url", "image", "file"),
+  format = c("png", "jpeg", "gif"),
+  path = "./",
+  fname = "aiedit",
+  openai_api_key = Sys.getenv("OPENAI_API_KEY")
+)
+```
+
+- image
+  - character. 편집할 이미지 파일의 이름입니다.
+- mask
+  - character. 투명한(alpha 값이 0인 경우) 영역이 이미지를 편집하 위치를
+    나타내는 추가 이미지로, 4MB 미만의 유효한 PNG 파일이어야 하며
+    이미지와 크기가 같아야 합니다.
+- prompt
+  - character. 편집을 원하는 이미지에 대한 설명으로 최대 길이는
+    1000자입니다.
+- ko2en
+  - logical. 프롬프트가 한국어일 때, 영어로 번역하여 질의하는 여부
+    설정합니다. TRUE이면 한글 프롬프트를 영어로 번역하여 프롬프트를
+    질의합니다. 한글로 프롬프트를 작성하면, 그려진 그림의 결과가 원하는
+    결과를 만들지 못한 경험이 많습니다. 그래서 한글 프롬프트에서는
+    반드시 TRUE로 지정하는 것이 좋습니다.
+- n
+  - integer. 생성할 이미지의 개수를 1과 10 사이의 정수로 지정합니다.
+    기본값은 1로 하나의 그림을 그립니다.
+- size
+  - character. 생성할 이미지의 크기로 “1024x1024”, “256x256”,
+    “512x512”에서 하나를 선택합니다. 정사각형 크기만 지원하며, 기본값은
+    “1024x1024”입니다.
+- type
+  - character. 반환하는 이미지 타입을 다음 3가지에서 선택합니다.
+    - “url” : 기본값으로 생성된 이미지에 접근할 수 있는 OpenAI의 URL을
+      반환합니다.
+    - “image” : 생성한 이미지를 R 환경의 플롯으로 출력합니다.
+    - “file” : 이미지 파일을 생성합니다.
+- format
+  - character. 이미지 파일의 포맷으로 `type`의 값이 “file”일 경우만
+    적용됩니다. “png”, “jpeg”, “gif”에서 선택하며, 기본값은 “png”입니다.
+- path
+  - character. 파일을 생성할 디렉토리 경로로 `type`의 값이 “file”일
+    경우만 적용됩니다.
+- fname
+  - character. 경로와 확장자를 제외한 이미지 파일의 이름으로, `type`의
+    값이 “file”일 경우만 적용됩니다.
+- openai_api_key
+  - character. OpenAI API key입니다. 만약 `regist_openai_key()`,
+    `sett_openai_key()`로 API key를 설정했다면 이 인수값을 지정할
+    필요없습니다.
+
+`bitGPT` 패키지에는 “cloud.png” 파일을 제공하고 있습니다. 이 파일은
+정사각형 규격의 이미지 파일로 다음과 같습니다.
+
+<figure>
+<img src="inst/images/cloud.png" style="width:60.0%;height:60.0%"
+alt="원 소스 이미지" />
+<figcaption aria-hidden="true">원 소스 이미지</figcaption>
+</figure>
+
+그리고 mask를 위한 파일로 “cloud_mask.png” 파일을 제공하고 있습니다. 이
+파일 역시 정사각형 규격의 이미지 파일로 다음과 같습니다. 그리고 이미지의
+크기는 “cloud.png” 파일과 동일합니다.
+
+<figure>
+<img src="inst/images/cloud_mask.png" style="width:60.0%;height:60.0%"
+alt="마스크 이미지" />
+<figcaption aria-hidden="true">마스크 이미지</figcaption>
+</figure>
+
+“cloud.png” 이미지 파일을 편집해 보겠습니다.
+
+``` r
+# 편집할 이미지
+image <- system.file("images", "cloud.png", package = "bitGPT")
+
+# Mask 이미지
+mask <- system.file("images", "cloud_mask.png", package = "bitGPT")
+
+# 이미지를 반환
+draw_img_edit(image, mask, prompt = "하늘을 날아다니는 UFO", type = "image")
+```
+
+<figure>
+<img src="man/figures/cloud_ufo.png" style="width:60.0%;height:60.0%"
+alt="편집된 이미지" />
+<figcaption aria-hidden="true">편집된 이미지</figcaption>
+</figure>
+
 ### Variate image with chatGPT
 
 `chatGPT`를 이용해서, 이미지를 변형할 수 있습니다.
@@ -245,16 +501,7 @@ draw_img_variation(
 )
 ```
 
-`bitGPT` 패키지에는 “cloud.png” 파일을 제공하고 있습니다. 이 파일은
-정사각형 규격의 이미지 파일로 다음과 같습니다.
-
-<figure>
-<img src="inst/images/cloud.png" style="width:60.0%;height:60.0%"
-alt="원 소스 이미지" />
-<figcaption aria-hidden="true">원 소스 이미지</figcaption>
-</figure>
-
-이 이미지 파일을 변형해 보겠습니다.
+앞에서 소개한 “cloud.png” 이미지 파일을 변형해 보겠습니다.
 
 ``` r
 # 변형할 이미지
