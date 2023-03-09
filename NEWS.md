@@ -1,4 +1,13 @@
-# bitGPT 0.2.1.9001
+# bitGPT 0.2.2.9000
+
+## NEW FEATURES
+
+* 실시간 음성(오디오) 레코드 기능의 추가. (#12). 
+    - record_audio()
+    
+    
+    
+# bitGPT 0.2.1.
 
 ## NEW FEATURES
 

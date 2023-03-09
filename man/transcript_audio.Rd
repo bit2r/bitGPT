@@ -19,7 +19,7 @@ transcript_audio(
 \item{openai_api_key}{character. openai의 API key.}
 }
 \description{
-chatGPT를 이용해서 음성 오디오 파일로 STT(Speech to Text )를 수행함.
+chatGPT를 이용해서 음성 오디오 파일로 STT(Speech to Text)를 수행함.
 }
 \details{
 오디오 파일의 포맷은 mp3, mp4, mpeg, mpga, m4a, wav, webm중 하나만 허용함.
