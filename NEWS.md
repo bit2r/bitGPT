@@ -1,4 +1,21 @@
-# bitGPT 0.2.2.9000
+# bitGPT 0.3.0.9000
+
+## NEW FEATURES
+
+* message 클래스 객체의 정의 및 관련 메소드 정의. (#12). 
+    - create_messages()
+    - add.messages()
+
+## MAJOR CHANGES
+
+* chat completion의 message 처리 세분화. (#15).
+
+## MINOR CHANGES
+
+* chat completion의 반환 유형에 "messages" 추가 및 "viewer" 유형의 개선.
+
+
+# bitGPT 0.2.2.
 
 ## NEW FEATURES
 

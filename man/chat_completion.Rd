@@ -9,12 +9,22 @@ chat_completion(
   model = c("gpt-3.5-turbo", "gpt-3.5-turbo-0301"),
   temperature = 1,
   top_p = 1,
-  type = c("text", "console", "viewer"),
+  n = 1,
+  stream = FALSE,
+  stop = NULL,
+  max_tokens = NULL,
+  presence_penalty = 0,
+  frequency_penalty = 0,
+  logit_bias = NULL,
+  user = NULL,
+  type = c("text", "console", "viewer", "messages"),
   openai_api_key = Sys.getenv("OPENAI_API_KEY")
 )
 }
 \arguments{
-\item{messages}{character. 채팅을 위한 메시지. 메시지는 영문과 국문 모두 가능함.}
+\item{messages}{character. 채팅을 위한 메시지.
+길이가 1인 character vector나 messages 객체를 사용함.
+character vector의 경우에는 role이 user인 경우의 메시지를 기술해야함.}
 
 \item{model}{character. Chat completion에 사용할 OpenAI의 모델로,
 "gpt-3.5-turbo", "gpt-3.5-turbo-0301"에서 선택함. 기본값은 "gpt-3.5-turbo".}
@@ -29,25 +39,54 @@ chat_completion(
 따라서 0.1은 상위 10\% 확률 질량을 구성하는 토큰만 고려한다는 의미.
 일반적으로 이 값이나 temperature를 변경하는 것을 권장하지만 둘 다 변경하는 것은 권장하지 않음.}
 
-\item{type}{character. 반환하는 결과 타입. "text", "console", "viewer"에서 선택하며,
+\item{n}{integer. 각 입력 메시지에 대해 생성할 채팅 완료 선택 항목의 수로 기본값은 1.}
+
+\item{stream}{logical. 이 옵션을 설정하면 ChatGPT에서와 같이 부분 메시지가 전송됨.
+토큰은 사용 가능해지면 data-only server-sent 이벤트로 전송되며, 스트림은 data의 \link{DONE} 메시지로 스트림이 종료됨.}
+
+\item{stop}{character. API가 추가 토큰 생성을 중지하는 시퀀스는 1부터 최대 4개까지임.}
+
+\item{max_tokens}{integer. 생성된 답변에 허용되는 토큰의 최대 개수.
+기본적으로 모델이 반환할 수 있는 토큰 수는 (4096 - 프롬프트 토큰).}
+
+\item{presence_penalty}{numeric. -2.0에서 2.0 사이의 숫자.
+양수 값은 지금까지 텍스트에 등장한 토큰에 따라 새로운 토큰에 불이익을 주므로 모델이 새로운 주제에 대해 이야기할 가능성이 높아짐.}
+
+\item{frequency_penalty}{numeric. -2.0에서 2.0 사이의 숫자.
+양수 값은 지금까지 텍스트에서 기존 빈도에 따라 새 토큰에 불이익을 주어 모델이 같은 줄을 그대로 반복할 가능성을 낮춤.}
+
+\item{logit_bias}{완료에 지정된 토큰이 표시될 가능성을 수정.
+토큰(토큰화기에서 토큰 ID로 지정)을 -100에서 100 사이의 연관된 바이어스 값에 매핑하는 json 객체를 받음.
+수학적으로 바이어스는 샘플링 전에 모델에서 생성된 로그에 추가됨.
+정확한 효과는 모델마다 다르지만 -1에서 1 사이의 값은 선택 가능성을 줄이거나 늘리고,
+-100 또는 100과 같은 값은 관련 토큰을 금지하거나 독점적으로 선택하게 됨.}
+
+\item{user}{character. 최종 사용자를 나타내는 고유 식별자로, OpenAI가 악용을 모니터링하고 감지하는 데 도움이 될 수 있음.}
+
+\item{type}{character. 반환하는 결과 타입. "text", "console", "viewer", "messages"에서 선택하며,
 기본값인 "text"는 텍스트를, "console"는 R 콘솔에 프린트 아웃되며,
 "viewer"는 HTML 포맷으로 브라우저에 출력됨. 만약 결과에 R 코드가 chunk로 포함되어 있다면,
-코드가 실행된 결과도 HTML 문서에 포함됨}
+코드가 실행된 결과도 HTML 문서에 포함됨.
+"messages"는 결과를 assistant 컴포넌트에 추가한 messages 객체를 반환함.}
 
 \item{openai_api_key}{character. openai의 API key.}
 }
 \description{
-chatGPT를 이용해서 Chat completion을 수행함.
+chatGPT를 이용해서 chat completion을 수행함.
 }
 \details{
 type 인수가 "viewer"일 경우에 질의 결과에 R 코드가 포함되어 있다고 모두 수행되는 것은 아님.
 R 코드가 chunk로 포함되어 있을 경우에만, 해당 chunk의 R 코드가 실행되며,
 어쩌면 불완전한 코드로 인해서 에러가 발생할 수도 있음.
+메시지에 이전의 메시지를 추가하여 chat completion을 수행하면,
+이전 메시지를 고려하여 결과를 반환함.
 }
 \examples{
 \dontrun{
-# 텍스트로 반환
+# character 벡터로 메시지를 정의하는 사례
 messages <- "mtcars 데이터를 ggplot2 패키지로 wt 변수와 mpg 변수를 EDA하는 R 스크립트를 짜줘."
+
+# 텍스트로 반환
 chat_completion(messages)
 
 # R 콘솔에 프린트 아웃
@@ -55,5 +94,20 @@ chat_completion(messages, type = "console")
 
 # HTML 포맷으로 브라우저에 출력
 chat_completion(messages, type = "viewer")
+
+# 메시지 객체로 메시지를 정의하는 사례
+msg <- create_messages(user = "R을 이용한 통계학의 이해 커리큘럼을 부탁해",
+                       system = "assistant는 R을 이용해서 통계학을 가르치는 강사입니다.")
+# 메시지 객체로 반환
+answer <- chat_completion(msg, type = "messages")
+answer
+
+# 반환받은 메시지 객체에 질의를 위한 user role의 메시지 추가
+msg <- add(answer, user = "커리큘럼에 tidyverse 패키지를 사용하는 방법을 추가해줘.")
+
+# 이전 메시지를 포함하여 추가 질의
+answer2 <- chat_completion(msg, type = "viewer")
+answer2
+
 }
 }
