@@ -2,7 +2,7 @@
 % Please edit documentation in R/chat.R
 \name{add.messages}
 \alias{add.messages}
-\title{Create chat messages for chatGPT}
+\title{Add chat messages for chatGPT}
 \usage{
 \method{add}{messages}(messages, assistant = NULL, user = NULL, ...)
 }

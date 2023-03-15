@@ -71,6 +71,9 @@ character vector의 경우에는 role이 user인 경우의 메시지를 기술�
 
 \item{openai_api_key}{character. openai의 API key.}
 }
+\value{
+messages 객체.
+}
 \description{
 chatGPT를 이용해서 chat completion을 수행함.
 }

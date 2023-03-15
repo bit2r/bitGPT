@@ -1,4 +1,13 @@
-# bitGPT 0.3.0.9000
+# bitGPT 0.3.1.9000
+
+## NEW FEATURES
+
+* messages 객체 출력 및 웹 브라우징 메소드. (#17). 
+    - show()
+
+
+
+# bitGPT 0.3.0.
 
 ## NEW FEATURES
 
@@ -13,6 +22,7 @@
 ## MINOR CHANGES
 
 * chat completion의 반환 유형에 "messages" 추가 및 "viewer" 유형의 개선.
+    - chat_completion()
 
 
 # bitGPT 0.2.2.

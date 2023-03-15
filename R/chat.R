@@ -5,6 +5,12 @@ add <- function(messages, ...) {
 }
 
 
+#' @export
+show <- function(messages, type = c("console", "viewer"), ...) {
+  UseMethod("show", messages)
+}
+
+
 #' Create chat messages for chatGPT
 #' @description chatGPT의 chat completion을 수행하기 위한 messages를 생성함
 #' @param user character. user role을 갖는 메시지.
@@ -49,7 +55,8 @@ create_messages <- function(user = NULL, system = NULL) {
   messages
 }
 
-#' Create chat messages for chatGPT
+
+#' Add chat messages for chatGPT
 #' @description chatGPT의 chat completion messages에 메시지를 추가
 #' @param messages messages. chatGPT와 chat completion을 수행하기 위한 메시지 객체.
 #' @param assistant character. assistant role을 갖는 메시지.
@@ -146,6 +153,7 @@ add.messages <- function(messages, assistant = NULL, user = NULL, ...) {
 #' 메시지에 이전의 메시지를 추가하여 chat completion을 수행하면,
 #' 이전 메시지를 고려하여 결과를 반환함.
 #' @param openai_api_key character. openai의 API key.
+#' @return messages 객체.
 #' @examples
 #' \dontrun{
 #' # character 벡터로 메시지를 정의하는 사례
@@ -355,16 +363,81 @@ chat_completion <- function(messages = NULL,
   messages_list <- add(messages_list, assistant = answer)
 
   if (type %in% "text") {
-    return(answer)
+    return(messages_list)
   } else   if (type %in% "console") {
-    cat(answer)
-    invisible(answer)
+    show(messages_list, type = "console")
+    invisible(messages_list)
+  } else if (type %in% "viewer") {
+    show(messages_list, type = "viewer")
+    invisible(messages_list)
+  } else if (type %in% "messages") {
+    return(messages_list)
+  }
+}
+
+
+
+#' Show chat messages object
+#' @description chatGPT의 chat completion를 위한 messages 객체를 조회함
+#' @param messages messages. chatGPT와 chat completion messages 객체.
+#' @param type character. 반환하는 결과 타입. console", "viewer"에서 선택하며,
+#' 기본값인 "console"는 R 콘솔에 프린트 아웃되며, "viewer"는 HTML 포맷으로 브라우저에 출력됨.
+#' 만약 결과에 R 코드가 chunk로 포함되어 있다면, 코드가 실행된 결과도 HTML 문서에 포함됨.
+#' @examples
+#' \dontrun{
+#' msg <- create_messages(user = "R을 이용한 통계학의 이해 커리큘럼을 부탁해",
+#'                        system = "assistant는 R을 이용해서 통계학을 가르치는 강사입니다.")
+#' show(msg)
+#'
+#' # 메시지 객체로 반환
+#' answer <- chat_completion(msg, type = "messages")
+#' show(answer)
+#'
+#' # 반환받은 메시지 객체에 질의를 위한 user role의 메시지 추가
+#' msg <- add(answer, user = "커리큘럼에 tidyverse 패키지를 사용하는 방법을 추가해줘.")
+#'
+#' # 이전 메시지를 포함하여 추가 질의
+#' answer2 <- chat_completion(msg)
+#' show(answer2)
+#' }
+
+#' @method show messages
+#' @export
+#' @import dplyr
+#' @importFrom purrr walk
+#' @importFrom stringr str_replace_all
+#' @importFrom cli cli_div cli_rule cli_end
+#' @importFrom glue glue
+show.messages <- function(messages, type = c("console", "viewer"), ...) {
+  if (!is.null(messages)) {
+    assertthat::assert_that(
+      is_messages_object(messages)
+    )
+  }
+
+  type <- match.arg(type)
+
+  if (type %in% "console") {
+    messages %>%
+      purrr::walk(
+        function(x) {
+          role <- x[["role"]]
+          content <- x[["content"]]
+
+          d <- cli::cli_div(theme = list(rule = list(color = "cyan",
+                                                     "line-type" = "double")))
+          cli::cli_rule("Chat with chatGPT", right = glue::glue("{role}"))
+          cli::cli_end(d)
+          cat(glue::glue("{content}\n\n\n"))
+        }
+      )
   } else if (type %in% "viewer") {
     cat("---\n", file = "answer.Rmd")
+    cat("title: Chat with chatGPT\n", file = "answer.Rmd", append = TRUE)
     cat("output: html_document\n", file = "answer.Rmd", append = TRUE)
     cat("---\n\n", file = "answer.Rmd", append = TRUE)
 
-    messages_list %>%
+    messages %>%
       purrr::walk(
         function(x) {
           role <- x[["role"]]
@@ -395,12 +468,5 @@ chat_completion <- function(messages = NULL,
 
     unlink("answer.Rmd")
     unlink("answer.md")
-
-    invisible(answer)
-  } else if (type %in% "messages") {
-      return(messages_list)
   }
 }
-
-
-

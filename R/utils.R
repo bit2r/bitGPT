@@ -31,10 +31,18 @@ is_messages <- function(x) {
   }
 }
 
-assertthat::on_failure(is.string) <- function(call, env) {
+assertthat::on_failure(is_messages) <- function(call, env) {
   paste0(deparse(call$x), " is not a string (a length one character vector) or not a messages object.")
 }
 
+
+is_messages_object <- function(x) {
+  class(x)[1] %in% "messages"
+}
+
+assertthat::on_failure(is_messages_object) <- function(call, env) {
+  paste0(deparse(call$x), " is not a messages object.")
+}
 
 # modufy openai package
 verify_mime_type <- function (result) {
