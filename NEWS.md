@@ -1,9 +1,12 @@
-# bitGPT 0.3.1.9000
+# bitGPT 0.3.1.9001
 
 ## NEW FEATURES
 
 * messages 객체 출력 및 웹 브라우징 메소드. (#17). 
     - show()
+
+* Model lists 조회 기능. (#18). 
+    - model_list()
 
 
 
