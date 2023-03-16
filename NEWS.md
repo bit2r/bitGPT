@@ -6,7 +6,7 @@
     - show()
 
 * Model lists 조회 기능. (#18). 
-    - model_list()
+    - list_models()
 
 
 

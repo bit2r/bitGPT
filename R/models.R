@@ -30,17 +30,17 @@
 #' }
 #' @examples
 #' \dontrun{
-#' get_model_list()
+#' list_models()
 #'
 #' # nested list 변수인 permission을 펼침
-#' get_model_list(unnest = TRUE)
+#' list_models(unnest = TRUE)
 #' }
 #' @export
 #' @import dplyr
 #' @importFrom openai list_models
 #' @importFrom lubridate as_datetime
 #' @importFrom purrr map_dfr
-model_list <- function(unnest = FALSE) {
+list_models <- function(unnest = FALSE) {
   models <- openai::list_models() %>%
     "$"("data") %>%
     mutate(created = lubridate::as_datetime(created))
