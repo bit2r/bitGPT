@@ -1,4 +1,13 @@
-# bitGPT 0.3.1.9001
+# bitGPT 0.3.2.9000
+
+## NEW FEATURES
+
+* 모델 인스턴스 검색 기능. (#19). 
+    - retrieve_model()
+
+
+
+# bitGPT 0.3.1.
 
 ## NEW FEATURES
 
