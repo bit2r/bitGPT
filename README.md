@@ -1,13 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-    ## 
-    ## Attaching package: 'bitGPT'
-
-    ## The following object is masked from 'package:methods':
-    ## 
-    ##     show
-
 # bitGPT <img src="man/figures/bitGPT.png" align="right" height="120" width="103.6"/>
 
 ## Overview

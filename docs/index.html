@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">bitGPT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.3.9000</span>
       </span>
     </div>
 
@@ -65,6 +65,13 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Attaching package: 'bitGPT'</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="do">## The following object is masked from 'package:methods':</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="do">##     show</span></span></code></pre></div>
 <div class="section level1">
 <div class="page-header"><h1 id="bitgpt-">bitGPT <img src="reference/figures/bitGPT.png" align="right" height="120" width="103.6"><a class="anchor" aria-label="anchor" href="#bitgpt-"></a>
 </h1></div>
@@ -81,6 +88,12 @@
 </ul>
 </li>
 <li>OpenAI의 채팅 자동 완성</li>
+<li>OpenAI의 텍스트 자동 완성
+<ul>
+<li>한국어 프롬프트는 영어 프롬프트로 번역되어 질의하고 한글 결과 반환<br>
+</li>
+</ul>
+</li>
 <li>OpenAI의 이미지 프로세싱
 <ul>
 <li>이미지 생성
@@ -99,6 +112,8 @@
 <li>이미지 변형</li>
 </ul>
 </li>
+<li>음성의 녹취를 위한 오디오 녹음 기능<br>
+</li>
 <li>OpenAI의 STT(Speech to Text)</li>
 <li>Naver 파파고의 텍스트 번역기</li>
 </ul>
@@ -107,7 +122,7 @@
 <h2 id="install-bitgpt">Install bitGPT<a class="anchor" aria-label="anchor" href="#install-bitgpt"></a>
 </h2>
 <p>github 리파지토리로부터 다음의 명령어로 패키지를 설치합니다.:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"bit2r/bitGPT"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -120,14 +135,14 @@
 </h3>
 <p>API key는 공유되어서는 안됩니다. 예시에서는 OpenAI API key가 XXXXXXXXXXX임을 가정하였습니다.</p>
 <p><code><a href="reference/regist_openai_key.html">regist_openai_key()</a></code>를 한번 수행하면, 번거롭게 매번 세션마다 API key를 설정할 필요가 없습니다.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">bitGPT</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 실제 사용자가 할당받은 openai API key를 사용합니다.</span></span>
 <span><span class="fu"><a href="reference/regist_openai_key.html">regist_openai_key</a></span><span class="op">(</span><span class="st">"XXXXXXXXXXX"</span><span class="op">)</span></span></code></pre></div>
 <p>만약에 개인 컴퓨터가 아닌 여러 사용자가 사용하는 환경에 bitGPT 패키지를 설치한 경우라면, API key의 보안을 위해서 <code><a href="reference/regist_openai_key.html">regist_openai_key()</a></code>대신 <code><a href="reference/set_openai_key.html">set_openai_key()</a></code>를 사용하세요.</p>
 <p><code><a href="reference/set_openai_key.html">set_openai_key()</a></code>는 OpenAI API key를 R System environment에 설정하기 때문에 세션이 종료되고 다시 R을 구동해서 새로운 세션이 생기면, 재설정해야 합니다.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 실제 사용자가 할당받은 openai API key를 사용합니다.</span></span>
 <span><span class="fu"><a href="reference/set_openai_key.html">set_openai_key</a></span><span class="op">(</span><span class="st">"XXXXXXXXXXX"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -135,10 +150,10 @@
 <h3 id="naver-파파고-api-key-등록">Naver 파파고 API key 등록<a class="anchor" aria-label="anchor" href="#naver-%ED%8C%8C%ED%8C%8C%EA%B3%A0-api-key-%EB%93%B1%EB%A1%9D"></a>
 </h3>
 <p>Naver 파파고 API key는 <code>client ID</code>와 <code>client secret</code>로 구성되어 있습니다. OpenAI API key와 유사한 방법으로 <code><a href="reference/regist_naver_key.html">regist_naver_key()</a></code>를 한번 수행하여 등록하거나, <code><a href="reference/set_naver_key.html">set_naver_key()</a></code>로 세션 내에서 설정합니다.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 실제 사용자가 할당받은 Naver API key로 등록합니다.</span></span>
 <span><span class="fu"><a href="reference/regist_naver_key.html">regist_naver_key</a></span><span class="op">(</span>client_id <span class="op">=</span> <span class="st">"XXXXXXXXXXX"</span>, client_secret <span class="op">=</span> <span class="st">"XXXXXXXXXXX"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 실제 사용자가 할당받은 Naver API key로 설정합니다.</span></span>
 <span><span class="fu"><a href="reference/set_naver_key.html">set_naver_key</a></span><span class="op">(</span>client_id <span class="op">=</span> <span class="st">"XXXXXXXXXXX"</span>, client_secret <span class="op">=</span> <span class="st">"XXXXXXXXXXX"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -150,7 +165,7 @@
 <h3 id="파파고-번역">파파고 번역<a class="anchor" aria-label="anchor" href="#%ED%8C%8C%ED%8C%8C%EA%B3%A0-%EB%B2%88%EC%97%AD"></a>
 </h3>
 <p><code><a href="reference/translate.html">translate()</a></code>는 파파고 번역을 수행합니다.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/translate.html">translate</a></span><span class="op">(</span></span>
 <span>  text <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  source <span class="op">=</span> <span class="st">"ko"</span>,</span>
@@ -186,7 +201,7 @@
 </li>
 </ul>
 <p>몇 개 문장을 번역해 봅니다.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">text</span> <span class="op">&lt;-</span> <span class="st">"빈센트 반 고흐 스타일로 일출과 갈매기를 그려줘"</span></span>
 <span><span class="fu"><a href="reference/translate.html">translate</a></span><span class="op">(</span><span class="va">text</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Draw a sunrise and a seagull in Vincent van Gogh style."</span></span>
@@ -204,7 +219,7 @@
 </h3>
 <p><code>chatGPT</code>를 이용해서, 생성할 이미지를 설명하는 프롬프트에 부합하는 이미지를 생성할 수 있습니다.</p>
 <p>여러분은 다음의 <code><a href="reference/draw_img.html">draw_img()</a></code>로 원하는 그림을 그리는 화가가 될 수 있습니다.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/chat_completion.html">chat_completion</a></span><span class="op">(</span></span>
 <span>  messages <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gpt-3.5-turbo"</span>, <span class="st">"gpt-3.5-turbo-0301"</span><span class="op">)</span>,</span>
@@ -251,64 +266,64 @@
 <h3 id="type--text">type = “text”<a class="anchor" aria-label="anchor" href="#type--text"></a>
 </h3>
 <p>이 방법은 반환받은 텍스트 데이터를 사후에 가공하여 활용할 때 유용한 방법입니다.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"R의 가장 큰 장점은 무엇일까?."</span>, <span class="at">type =</span> <span class="st">"text"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"</span><span class="sc">\n\n</span><span class="st">R의 가장 큰 장점은 다양한 통계 분석 기능과 그래프 그리기 기능이 있다는 것입니다. </span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="st">또한 R은 오픈소스 소프트웨어이므로 무료로 이용할 수 있으며, 데이터 전처리 및 분석에 있어서 다양한 패키지나 </span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="st">라이브러리를 제공하여 효과적인 해결책을 제공할 수 있습니다. </span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="st">또한 R은 데이터 시각화에 강점을 가지고 있어, 데이터의 시각화 및 결과의 시각화가 수월합니다. </span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="st">또한 R은 다양한 데이터 형태를 지원하므로, 대용량 데이터셋에서도 빠르게 처리할 수 있습니다. </span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="st">따라서 R은 데이터 분석 분야에서 매우 유용한 도구이며, 통계분석 전문가 및 데이터 분석가들에게 필수적인 도구로 인식되고 있습니다."</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"R의 가장 큰 장점은 무엇일까?."</span>, <span class="at">type =</span> <span class="st">"text"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"</span><span class="sc">\n\n</span><span class="st">R의 가장 큰 장점은 다양한 통계 분석 기능과 그래프 그리기 기능이 있다는 것입니다. </span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="st">또한 R은 오픈소스 소프트웨어이므로 무료로 이용할 수 있으며, 데이터 전처리 및 분석에 있어서 다양한 패키지나 </span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="st">라이브러리를 제공하여 효과적인 해결책을 제공할 수 있습니다. </span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="st">또한 R은 데이터 시각화에 강점을 가지고 있어, 데이터의 시각화 및 결과의 시각화가 수월합니다. </span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="st">또한 R은 다양한 데이터 형태를 지원하므로, 대용량 데이터셋에서도 빠르게 처리할 수 있습니다. </span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="st">따라서 R은 데이터 분석 분야에서 매우 유용한 도구이며, 통계분석 전문가 및 데이터 분석가들에게 필수적인 도구로 인식되고 있습니다."</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="type--console">type = “console”<a class="anchor" aria-label="anchor" href="#type--console"></a>
 </h3>
 <p>이 방법은 <code>chatGPT</code>와 질문과 답변의 대화를 이어나갈 때 유용한 방법입니다.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"안녕, 반가워."</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>안녕하세요<span class="sc">!</span> 저는 AI 어시스턴트입니다. 무엇을 도와드릴까요?</span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"네 이름은 뭐니?"</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>제 이름은 OpenAI Assistive입니다. 저는 OpenAI의 인공지능 어시스턴트입니다.</span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"미세먼지가 많은 날은 어떻게 준비해야할까?"</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"안녕, 반가워."</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>안녕하세요<span class="sc">!</span> 저는 AI 어시스턴트입니다. 무엇을 도와드릴까요?</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"네 이름은 뭐니?"</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>미세먼지가 많은 날에는 다음과 같은 준비를 하면 좋습니다.</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fl">1.</span> 마스크 착용 <span class="sc">:</span> 미세먼지를 막기 위해 마스크를 착용해야 합니다. 미세먼지가 심한 날에는 KF94 등급 이상의 마스크를 선택해야 합니다.</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fl">2.</span> 실내 환기 방지 <span class="sc">:</span> 실내 공기를 집중적으로 정화하기 위해 창문, 문을 닫고 에어컨, 공기청정기를 돌리는 것이 좋습니다.</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fl">3.</span> 외출 제한 <span class="sc">:</span> 미세먼지 농도가 매우 높은 날에는 가능한 실내에서 활동을 하는 것이 좋으며, 외출이 필요한 경우에는 마스크를 꼭 착용해야 합니다.</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="fl">4.</span> 적정한 수분 섭취 <span class="sc">:</span> 미세먼지로 인해 목이 건조해지는 경우가 많으므로, 충분한 수분을 섭취해 목을 적정한 상태로 유지해야 합니다.</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="fl">5.</span> 눈 건강 보호 <span class="sc">:</span> 미세먼지는 눈에도 영향을 미칠 수 있으므로, 안경이나 눈을 보호할 수 있는 고글을 착용하는 것이 좋습니다. 두통, 결막염 등이 있는 경우 병원 선생님 상담을 권장합니다.</span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"근의 공식을 설명해줘"</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>제 이름은 OpenAI Assistive입니다. 저는 OpenAI의 인공지능 어시스턴트입니다.</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"미세먼지가 많은 날은 어떻게 준비해야할까?"</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>근의 공식은 다음과 같습니다.</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>ax<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> bx <span class="sc">+</span> c <span class="ot">=</span> <span class="dv">0</span> (a ≠ <span class="dv">0</span>)라는 이차방정식이 주어졌을 때, 이 방정식의 근은 다음과 같은 공식을 이용하여 계산할 수 있습니다.</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> (<span class="sc">-</span>b ± √(b<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> 4ac)) <span class="sc">/</span> 2a</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>여기에서,</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> b는 이차항의 계수이며, x에 곱해진 계수의 합을 의미합니다.</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> a는 이차항의 계수입니다.</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> c는 상수항의 값입니다.</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> √는 루트 기호를 나타냅니다.</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> ±는 양수와 음수를 의미하는데, 이는 두 개의 식이 나올 수 있음을 나타냅니다.</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>이 공식을 이용하여 이차방정식의 근을 쉽게 구할 수 있습니다. 하지만 이 공식은 근의 개수에 따라 근의 실수, 허수, 중근 등으로 나눠져 있기 때문에 근을 구하기 전에 해당 방정식의 근의 개수가 어떤지 판별해야 합니다.</span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"피타고라스의 정리는 무엇이지?"</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>미세먼지가 많은 날에는 다음과 같은 준비를 하면 좋습니다.</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fl">1.</span> 마스크 착용 <span class="sc">:</span> 미세먼지를 막기 위해 마스크를 착용해야 합니다. 미세먼지가 심한 날에는 KF94 등급 이상의 마스크를 선택해야 합니다.</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fl">2.</span> 실내 환기 방지 <span class="sc">:</span> 실내 공기를 집중적으로 정화하기 위해 창문, 문을 닫고 에어컨, 공기청정기를 돌리는 것이 좋습니다.</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fl">3.</span> 외출 제한 <span class="sc">:</span> 미세먼지 농도가 매우 높은 날에는 가능한 실내에서 활동을 하는 것이 좋으며, 외출이 필요한 경우에는 마스크를 꼭 착용해야 합니다.</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="fl">4.</span> 적정한 수분 섭취 <span class="sc">:</span> 미세먼지로 인해 목이 건조해지는 경우가 많으므로, 충분한 수분을 섭취해 목을 적정한 상태로 유지해야 합니다.</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="fl">5.</span> 눈 건강 보호 <span class="sc">:</span> 미세먼지는 눈에도 영향을 미칠 수 있으므로, 안경이나 눈을 보호할 수 있는 고글을 착용하는 것이 좋습니다. 두통, 결막염 등이 있는 경우 병원 선생님 상담을 권장합니다.</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"근의 공식을 설명해줘"</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>피타고라스의 정리는 직각삼각형에서 빗변의 제곱이 나머지 두 변의 제곱의 합과 같다는 정리이다. 즉, <span class="sc">$</span>a<span class="sc">^</span><span class="dv">2</span><span class="sc">+</span>b<span class="sc">^</span><span class="dv">2</span><span class="ot">=</span>c<span class="sc">^</span><span class="dv">2</span><span class="sc">$</span>로 표현된다. 이러한 정리는 수학뿐만 아니라 공학, 물리학 등 다양한 분야에서 활용된다.</span></code></pre></div>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>근의 공식은 다음과 같습니다.</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>ax<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> bx <span class="sc">+</span> c <span class="ot">=</span> <span class="dv">0</span> (a ≠ <span class="dv">0</span>)라는 이차방정식이 주어졌을 때, 이 방정식의 근은 다음과 같은 공식을 이용하여 계산할 수 있습니다.</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> (<span class="sc">-</span>b ± √(b<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> 4ac)) <span class="sc">/</span> 2a</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>여기에서,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> b는 이차항의 계수이며, x에 곱해진 계수의 합을 의미합니다.</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> a는 이차항의 계수입니다.</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> c는 상수항의 값입니다.</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> √는 루트 기호를 나타냅니다.</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> ±는 양수와 음수를 의미하는데, 이는 두 개의 식이 나올 수 있음을 나타냅니다.</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>이 공식을 이용하여 이차방정식의 근을 쉽게 구할 수 있습니다. 하지만 이 공식은 근의 개수에 따라 근의 실수, 허수, 중근 등으로 나눠져 있기 때문에 근을 구하기 전에 해당 방정식의 근의 개수가 어떤지 판별해야 합니다.</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"피타고라스의 정리는 무엇이지?"</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>피타고라스의 정리는 직각삼각형에서 빗변의 제곱이 나머지 두 변의 제곱의 합과 같다는 정리이다. 즉, <span class="sc">$</span>a<span class="sc">^</span><span class="dv">2</span><span class="sc">+</span>b<span class="sc">^</span><span class="dv">2</span><span class="ot">=</span>c<span class="sc">^</span><span class="dv">2</span><span class="sc">$</span>로 표현된다. 이러한 정리는 수학뿐만 아니라 공학, 물리학 등 다양한 분야에서 활용된다.</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="type--viewer">type = “viewer”<a class="anchor" aria-label="anchor" href="#type--viewer"></a>
 </h3>
 <p>이 방법은 답변의 결과에 R 코드가 포함되어 있을 때 유용합니다. 반환된 결과를 R 마크다운으로 수행하여 HTML로 만든 후 브라우저에 띄워줍니다.</p>
 <p>다만, 경우에 따라서 답변의 결과 포함된 R 코드가 실행 중에 에러가 발생할 수 있는 불완전한 Pseudo 코드일 수 있습니다.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">messages</span> <span class="op">&lt;-</span> <span class="st">"mtcars 데이터를 ggplot2 패키지로 wt 변수와 mpg 변수를 EDA하는 R 스크립트를 짜줘."</span></span>
 <span></span>
 <span><span class="co"># HTML 포맷으로 브라우저에 출력</span></span>
@@ -326,7 +341,7 @@
 </h3>
 <p><code>chatGPT</code>를 이용해서, 생성할 이미지를 설명하는 프롬프트에 부합하는 이미지를 생성할 수 있습니다.</p>
 <p>여러분은 다음의 <code><a href="reference/draw_img.html">draw_img()</a></code>로 원하는 그림을 그리는 화가가 될 수 있습니다.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/draw_img.html">draw_img</a></span><span class="op">(</span></span>
 <span>  <span class="va">prompt</span>,</span>
 <span>  ko2en <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -393,15 +408,15 @@
 </ul>
 <p><strong>빈센트 반 고흐 스타일로 해변에서의 일출과 갈매기를 그려보겠습니다.</strong></p>
 <p>영어 프롬프트로 그림을 그립니다. <code>ko2en</code> 인수값은 FALSE로 지정합니다. 이 예제는 그려진 이미지에 접근할 수 있는 URL을 반환합니다.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prompt_en</span> <span class="op">&lt;-</span> <span class="st">"Draw a sunrise and a seagull in Vincent van Gogh style."</span></span>
 <span><span class="fu"><a href="reference/draw_img.html">draw_img</a></span><span class="op">(</span><span class="va">prompt_en</span>, ko2en <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p>한글 프롬프트로 그림을 그립니다. 그려진 결과는 R 플롯으로 반환되므로 RStudio 환경이라면, <code>Plots</code> 패널에서 확인할 수 있습니다.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prompt_ko</span> <span class="op">&lt;-</span> <span class="st">"빈센트 반 고흐 스타일로 일출과 갈매기를 그려줘"</span></span>
 <span><span class="fu"><a href="reference/draw_img.html">draw_img</a></span><span class="op">(</span><span class="va">prompt_ko</span>, type <span class="op">=</span> <span class="st">"image"</span><span class="op">)</span></span></code></pre></div>
 <p>파일로 출력하고 싶다면 <code>type</code>의 값을 “file”로 지정합니다. 파일의 경로와 이름을 지정하지 않았기 때문에, 현재의 working directory에 “aidrawing.png”라는 이름으로 생성됩니다.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/draw_img.html">draw_img</a></span><span class="op">(</span><span class="va">prompt_ko</span>, type <span class="op">=</span> <span class="st">"file"</span><span class="op">)</span></span></code></pre></div>
 <p>그리는 그림의 모양은 매번 달라집니다. 다음은 고흐가 그린 일출과 갈매기 작품입니다.</p>
 <p><img src="reference/figures/gogh_01.png" style="width:60.0%;height:60.0%" alt="고흐풍 드로잉"><img src="reference/figures/gogh_02.png" style="width:60.0%;height:60.0%" alt="고흐풍 드로잉"><img src="reference/figures/aidrawing.png" style="width:60.0%;height:60.0%" alt="고흐풍 드로잉"></p>
@@ -411,7 +426,7 @@
 </h3>
 <p><code>chatGPT</code>를 이용해서, 이미지를 편집할 수 있습니다.</p>
 <p>여러분은 다음의 <code><a href="reference/draw_img_edit.html">draw_img_edit()</a></code>로 원하는 이미지의 특정 부분을 퍈집할 수 있습니다. 함수의 인수는 <code><a href="reference/draw_img_variation.html">draw_img_variation()</a></code>와 거의 유사합니다. <code>image</code> 인수에 편집할 원래의 이미지 파일을, mask에 편집할 부분을 선택하는(mask) 이미지 파일을 지정하면 됩니다. 그리고 prompt에는 편집할 부분의 편집 내용을 기술합니다.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/draw_img_edit.html">draw_img_edit</a></span><span class="op">(</span></span>
 <span>  <span class="va">image</span>,</span>
 <span>  <span class="va">mask</span>,</span>
@@ -495,7 +510,7 @@
 <figure><img src="inst/images/cloud_mask.png" style="width:60.0%;height:60.0%" alt="마스크 이미지"><figcaption aria-hidden="true">
 마스크 이미지
 </figcaption></figure><p>“cloud.png” 이미지 파일을 편집해 보겠습니다.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 편집할 이미지</span></span>
 <span><span class="va">image</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"images"</span>, <span class="st">"cloud.png"</span>, package <span class="op">=</span> <span class="st">"bitGPT"</span><span class="op">)</span></span>
 <span></span>
@@ -513,7 +528,7 @@
 </h3>
 <p><code>chatGPT</code>를 이용해서, 이미지를 변형할 수 있습니다.</p>
 <p>여러분은 다음의 <code><a href="reference/draw_img_variation.html">draw_img_variation()</a></code>로 원하는 이미지를 유사하게 다른 이미지를 변형할 수 있습니다. 함수의 인수는 <code><a href="reference/draw_img.html">draw_img()</a></code>와 거의 유사합니다. <code>image</code> 인수에 변형하고자 할 원래의 이미지 파일을 지정하면 됩니다.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/draw_img_variation.html">draw_img_variation</a></span><span class="op">(</span></span>
 <span>  <span class="va">image</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">1L</span>,</span>
@@ -525,7 +540,7 @@
 <span>  openai_api_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"OPENAI_API_KEY"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>앞에서 소개한 “cloud.png” 이미지 파일을 변형해 보겠습니다.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 변형할 이미지</span></span>
 <span><span class="va">image</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"images"</span>, <span class="st">"cloud.png"</span>, package <span class="op">=</span> <span class="st">"bitGPT"</span><span class="op">)</span></span>
 <span></span>
@@ -543,7 +558,7 @@
 </h3>
 <p><code>chatGPT</code>를 이용해서, 음성 오디오 파일로 STT(Speech to Text )를 수행합니다.</p>
 <p>여러분은 <code><a href="reference/transcript_audio.html">transcript_audio()</a></code>로 STT를 수행할 수 있습니다.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/transcript_audio.html">transcript_audio</a></span><span class="op">(</span></span>
 <span>  <span class="va">file</span>,</span>
 <span>  language <span class="op">=</span> <span class="st">"ko"</span>,</span>
@@ -567,26 +582,27 @@
 </li>
 </ul>
 <p><code>bitGPT</code> 패키지에는 “korea_r_user.m4a” 파일을 제공하고 있습니다. 이 파일은 <code>한국R사용자회</code> 소개하는 짧은 음성파일입니다. 성능이 좋지 않는 스피치의 텍스트 전환의 성능을 판단하기 위해서, 스피치의 성능은 높지 않게 생성했습니다. 잘못 발음하여 다시 발음하거나, 문장내에서 띄어 읽는 부분이 부자연스러운 곳도 있습니다.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 음성 오디오 파일</span></span>
 <span><span class="va">speech</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"audios"</span>, <span class="st">"korea_r_user.m4a"</span>, package <span class="op">=</span> <span class="st">"bitGPT"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 음성 오디오를 텍스트로 전환</span></span>
 <span><span class="fu"><a href="reference/transcript_audio.html">transcript_audio</a></span><span class="op">(</span><span class="va">speech</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">text</span> </span>
 <span><span class="st">"사단법인 한국R 사용자예는 디지털 분평 등 해소와 통계 대중화를 위해 2020년 설립되었습니다. </span></span>
 <span><span class="st">오픈 통계 패키지 개발을 비롯하여 최근에 통계 및 데이터 과학 관련 오픈 전자책도 함께 제작하여 발간하고 있습니다. </span></span>
 <span><span class="st">통계 패키지와 통계 및 데이터 과학 책은 사용자의 회원들의 자발적인 참여로 개발 및 유지 보수되고 있습니다. </span></span>
 <span><span class="st">데이터 과학 분야의 인공지능 ai 체질 비트와 공존을 본격적으로 탐색하기 시작했습니다."</span> </span></code></pre></div>
 <p>스피치의 대상이 되는 원문 문장은 다음과 같습니다.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>사단법인 한국 R 사용자회는 디지털 불평등 해소와 통계 대중화를 위해 2022년 설립되었습니다. </span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>오픈 통계 패키지 개발을 비롯하여 최근에 통계 및 데이터 과학 관련 오픈 전자책도 함께 제작하여 발간하고 있습니다. </span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>통계 패키지와 통계 및 데이터 과학 전자책은 사용자회 회원들의 자발적인 참여로 개발 및 유지보수 되고 있습니다. </span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>데이터 과학 분야 인공지능 AI chatGPT와 공존을 본격적으로 탐색하기 시작했습니다. </span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>사단법인 한국 R 사용자회는 디지털 불평등 해소와 통계 대중화를 위해 2022년 설립되었습니다. </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>오픈 통계 패키지 개발을 비롯하여 최근에 통계 및 데이터 과학 관련 오픈 전자책도 함께 제작하여 발간하고 있습니다. </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>통계 패키지와 통계 및 데이터 과학 전자책은 사용자회 회원들의 자발적인 참여로 개발 및 유지보수 되고 있습니다. </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>데이터 과학 분야 인공지능 AI chatGPT와 공존을 본격적으로 탐색하기 시작했습니다. </span></code></pre></div>
 </div>
 </div>
 </div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
