@@ -1,6 +1,13 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+    ## 
+    ## Attaching package: 'bitGPT'
+
+    ## The following object is masked from 'package:methods':
+    ## 
+    ##     show
+
 # bitGPT <img src="man/figures/bitGPT.png" align="right" height="120" width="103.6"/>
 
 ## Overview
@@ -13,6 +20,8 @@ Features:
   - OpenAI의 API key
   - Naver 파파고의 client ID와 secret
 - OpenAI의 채팅 자동 완성
+- OpenAI의 텍스트 자동 완성
+  - 한국어 프롬프트는 영어 프롬프트로 번역되어 질의하고 한글 결과 반환  
 - OpenAI의 이미지 프로세싱
   - 이미지 생성
     - 영어 프롬프트와 한국어 프롬프트 지원
@@ -21,6 +30,7 @@ Features:
     - 영어 프롬프트와 한국어 프롬프트 지원
     - 한국어 프롬프트는 영어 프롬프트로 번역되어 질의  
   - 이미지 변형
+- 음성의 녹취를 위한 오디오 녹음 기능  
 - OpenAI의 STT(Speech to Text)
 - Naver 파파고의 텍스트 번역기
 
