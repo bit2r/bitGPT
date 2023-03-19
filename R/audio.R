@@ -147,8 +147,7 @@ record_audio  <- function(time, sample_rate = 44100, channels = c("mono", "stere
     time > 0
   )
 
-  channels <- match.arg(channels) %>%
-    "=="(c("mono", "stereo")) %>%
+  channels <- match.arg(channels) == (c("mono", "stereo")) %>%
     which()
 
   number_sample <- rep(NA_real_, sample_rate * time)

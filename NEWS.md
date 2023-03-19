@@ -1,4 +1,13 @@
-# bitGPT 0.3.2.9000
+# bitGPT 0.3.3.9000
+
+## NEW FEATURES
+
+* Create completion API 인터페이스 기능. (#13). 
+    - create_completion()
+
+
+
+# bitGPT 0.3.2.
 
 ## NEW FEATURES
 
