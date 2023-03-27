@@ -1,4 +1,13 @@
-# bitGPT 0.3.3.9000
+# bitGPT 0.3.4.9000
+
+## NEW FEATURES
+
+* Create embeddings 인터페이스 기능. (#22). 
+    - create_embeddings()
+    
+    
+    
+# bitGPT 0.3.3.
 
 ## NEW FEATURES
 
