@@ -142,11 +142,10 @@ add.messages <- function(messages, assistant = NULL, user = NULL, ...) {
 #' 정확한 효과는 모델마다 다르지만 -1에서 1 사이의 값은 선택 가능성을 줄이거나 늘리고,
 #' -100 또는 100과 같은 값은 관련 토큰을 금지하거나 독점적으로 선택하게 됨.
 #' @param user character. 최종 사용자를 나타내는 고유 식별자로, OpenAI가 악용을 모니터링하고 감지하는 데 도움이 될 수 있음.
-#' @param type character. 반환하는 결과 타입. "text", "console", "viewer", "messages"에서 선택하며,
-#' 기본값인 "text"는 텍스트를, "console"는 R 콘솔에 프린트 아웃되며,
-#' "viewer"는 HTML 포맷으로 브라우저에 출력됨. 만약 결과에 R 코드가 chunk로 포함되어 있다면,
-#' 코드가 실행된 결과도 HTML 문서에 포함됨.
+#' @param type character. 반환하는 결과 타입. "messages", "console", "viewer"에서 선택하며,
 #' "messages"는 결과를 assistant 컴포넌트에 추가한 messages 객체를 반환함.
+#' "console"는 R 콘솔에 프린트 아웃되며, "viewer"는 HTML 포맷으로 브라우저에 출력됨.
+#' 만약 결과에 R 코드가 chunk로 포함되어 있다면, 코드가 실행된 결과도 HTML 문서에 포함됨.
 #' @details type 인수가 "viewer"일 경우에 질의 결과에 R 코드가 포함되어 있다고 모두 수행되는 것은 아님.
 #' R 코드가 chunk로 포함되어 있을 경우에만, 해당 chunk의 R 코드가 실행되며,
 #' 어쩌면 불완전한 코드로 인해서 에러가 발생할 수도 있음.
@@ -159,7 +158,7 @@ add.messages <- function(messages, assistant = NULL, user = NULL, ...) {
 #' # character 벡터로 메시지를 정의하는 사례
 #' messages <- "mtcars 데이터를 ggplot2 패키지로 wt 변수와 mpg 변수를 EDA하는 R 스크립트를 짜줘."
 #'
-#' # 텍스트로 반환
+#' # 메시지 객체로 반환
 #' chat_completion(messages)
 #'
 #' # R 콘솔에 프린트 아웃
@@ -203,7 +202,7 @@ chat_completion <- function(messages = NULL,
                             frequency_penalty = 0,
                             logit_bias = NULL,
                             user = NULL,
-                            type = c("text", "console", "viewer", "messages"),
+                            type = c("messages", "console", "viewer"),
                             openai_api_key = Sys.getenv("OPENAI_API_KEY")) {
   #-----------------------------------------------------------------------------
   model <- match.arg(model)
@@ -362,7 +361,7 @@ chat_completion <- function(messages = NULL,
   answer <- parsed$choices$message.content
   messages_list <- add(messages_list, assistant = answer)
 
-  if (type %in% "text") {
+  if (type %in% "messages") {
     return(messages_list)
   } else   if (type %in% "console") {
     show(messages_list, type = "console")
@@ -370,8 +369,6 @@ chat_completion <- function(messages = NULL,
   } else if (type %in% "viewer") {
     show(messages_list, type = "viewer")
     invisible(messages_list)
-  } else if (type %in% "messages") {
-    return(messages_list)
   }
 }
 

@@ -1,4 +1,13 @@
-# bitGPT 0.3.4.9000
+# bitGPT 0.3.5.9000
+
+## MINOR CHANGES
+
+* chat_completion() 함수의 type 인수 컴플릭 수정. (#23). 
+* 현행 지원 함수의 형상으로 README 내용 수정. (#21).     
+
+
+
+# bitGPT 0.3.4.
 
 ## NEW FEATURES
 

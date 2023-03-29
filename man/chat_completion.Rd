@@ -17,7 +17,7 @@ chat_completion(
   frequency_penalty = 0,
   logit_bias = NULL,
   user = NULL,
-  type = c("text", "console", "viewer", "messages"),
+  type = c("messages", "console", "viewer"),
   openai_api_key = Sys.getenv("OPENAI_API_KEY")
 )
 }
@@ -63,11 +63,10 @@ character vector의 경우에는 role이 user인 경우의 메시지를 기술�
 
 \item{user}{character. 최종 사용자를 나타내는 고유 식별자로, OpenAI가 악용을 모니터링하고 감지하는 데 도움이 될 수 있음.}
 
-\item{type}{character. 반환하는 결과 타입. "text", "console", "viewer", "messages"에서 선택하며,
-기본값인 "text"는 텍스트를, "console"는 R 콘솔에 프린트 아웃되며,
-"viewer"는 HTML 포맷으로 브라우저에 출력됨. 만약 결과에 R 코드가 chunk로 포함되어 있다면,
-코드가 실행된 결과도 HTML 문서에 포함됨.
-"messages"는 결과를 assistant 컴포넌트에 추가한 messages 객체를 반환함.}
+\item{type}{character. 반환하는 결과 타입. "messages", "console", "viewer"에서 선택하며,
+"messages"는 결과를 assistant 컴포넌트에 추가한 messages 객체를 반환함.
+"console"는 R 콘솔에 프린트 아웃되며, "viewer"는 HTML 포맷으로 브라우저에 출력됨.
+만약 결과에 R 코드가 chunk로 포함되어 있다면, 코드가 실행된 결과도 HTML 문서에 포함됨.}
 
 \item{openai_api_key}{character. openai의 API key.}
 }
@@ -89,7 +88,7 @@ R 코드가 chunk로 포함되어 있을 경우에만, 해당 chunk의 R 코드�
 # character 벡터로 메시지를 정의하는 사례
 messages <- "mtcars 데이터를 ggplot2 패키지로 wt 변수와 mpg 변수를 EDA하는 R 스크립트를 짜줘."
 
-# 텍스트로 반환
+# 메시지 객체로 반환
 chat_completion(messages)
 
 # R 콘솔에 프린트 아웃
