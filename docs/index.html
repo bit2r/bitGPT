@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">bitGPT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.4.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.5.9000</span>
       </span>
     </div>
 
@@ -197,11 +197,11 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">text</span> <span class="op">&lt;-</span> <span class="st">"빈센트 반 고흐 스타일로 일출과 갈매기를 그려줘"</span></span>
 <span><span class="fu"><a href="reference/translate.html">translate</a></span><span class="op">(</span><span class="va">text</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Draw a sunrise and a seagull in Vincent van Gogh style."</span></span>
+<span><span class="co">#&gt; [1] "Vincent van Gogh style, please draw sunrise and seagulls"</span></span>
 <span></span>
 <span><span class="va">text</span> <span class="op">&lt;-</span> <span class="st">"We’ve trained a model called ChatGPT which interacts in a conversational way. The dialogue format makes it possible for ChatGPT to answer followup questions, admit its mistakes, challenge incorrect premises, and reject inappropriate requests."</span></span>
 <span><span class="fu"><a href="reference/translate.html">translate</a></span><span class="op">(</span><span class="va">text</span>, <span class="st">"en"</span>, <span class="st">"ko"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "우리는 대화 방식으로 상호 작용하는 ChatGPT이라는 모델을 훈련시켰다. 대화 형식을 통해 ChatGPT는 후속 질문에 답변하고, 실수를 인정하며, 잘못된 전제에 도전하고, 부적절한 요청을 거부할 수 있습니다."</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "우리는 대화 방식으로 상호 작용하는 ChatGPT이라는 모델을 훈련시켰다. 대화 형식을 통해 ChatGPT는 후속 질문에 답변하고, 실수를 인정하고, 잘못된 전제에 도전하고, 부적절한 요청을 거부할 수 있습니다."</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -210,15 +210,24 @@
 <div class="section level3">
 <h3 id="create-chat-completion-with-chatgpt">Create chat completion with chatGPT<a class="anchor" aria-label="anchor" href="#create-chat-completion-with-chatgpt"></a>
 </h3>
-<p><code>chatGPT</code>를 이용해서, 생성할 이미지를 설명하는 프롬프트에 부합하는 이미지를 생성할 수 있습니다.</p>
-<p>여러분은 다음의 <code><a href="reference/draw_img.html">draw_img()</a></code>로 원하는 그림을 그리는 화가가 될 수 있습니다.</p>
+<p><code>chatGPT</code>를 이용해서 대화형 인터페이스를 만들 수 있습니다.</p>
+<p>주어진 대화 히스토리를 기반으로, 대화를 지속하는 데 필요한 다음 문장을 생성합니다. 이 API는 이전 대화 히스토리를 계속해서 분석하고, 대화를 나아가는 데 필요한 정보를 자동으로 추론합니다.</p>
+<p>여러분은 다음의 <code><a href="reference/chat_completion.html">chat_completion()</a></code>로 원하는 대화를 만들어 나갈 수 있습니다.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/chat_completion.html">chat_completion</a></span><span class="op">(</span></span>
 <span>  messages <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gpt-3.5-turbo"</span>, <span class="st">"gpt-3.5-turbo-0301"</span><span class="op">)</span>,</span>
 <span>  temperature <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  top_p <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"text"</span>, <span class="st">"console"</span>, <span class="st">"viewer"</span><span class="op">)</span>,</span>
+<span>  n <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  stream <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  stop <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  max_tokens <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  presence_penalty <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  frequency_penalty <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  logit_bias <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  user <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"messages"</span>, <span class="st">"console"</span>, <span class="st">"viewer"</span><span class="op">)</span>,</span>
 <span>  openai_api_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"OPENAI_API_KEY"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <ul>
@@ -242,9 +251,49 @@
 <li>numeric. 온도를 이용한 샘플링의 대안으로, 핵 샘플링이라고 하며, 모델이 상위_p 확률 질량을 가진 토큰의 결과를 고려합니다. 따라서 0.1은 상위 10% 확률 질량을 구성하는 토큰만 고려한다는 의미입니다. 일반적으로 이 값이나 temperature를 변경하는 것을 권장하지만 둘 다 변경하는 것은 권장하지 않습니다.</li>
 </ul>
 </li>
+<li>n
+<ul>
+<li>integer. 각 입력 메시지에 대해 생성할 채팅 완료 선택 항목의 수로 기본값은 1입니다.</li>
+</ul>
+</li>
+<li>stream
+<ul>
+<li>logical. 이 옵션을 설정하면 ChatGPT에서와 같이 부분 메시지가 전송됩니다. 토큰은 사용 가능해지면 data-only server-sent 이벤트로 전송되며, 스트림은 data의 DONE 메시지로 스트림이 종료됩니다.</li>
+</ul>
+</li>
+<li>stop
+<ul>
+<li>character. API가 추가 토큰 생성을 중지하는 시퀀스는 1부터 최대 4개까지입니다.</li>
+</ul>
+</li>
+<li>max_tokens
+<ul>
+<li>integer. 생성된 답변에 허용되는 토큰의 최대 개수입니다. 기본적으로 모델이 반환할 수 있는 토큰 수는 (4096 - 프롬프트 토큰).</li>
+</ul>
+</li>
+<li>presence_penalty
+<ul>
+<li>numeric. -2.0에서 2.0 사이의 숫자. 양수 값은 지금까지 텍스트에 등장한 토큰에 따라 새로운 토큰에 불이익을 주므로 모델이 새로운 주제에 대해 이야기할 가능성이 높아집니다.</li>
+</ul>
+</li>
+<li>frequency_penalty
+<ul>
+<li>numeric. -2.0에서 2.0 사이의 숫자. 양수 값은 지금까지 텍스트에서 기존 빈도에 따라 새 토큰에 불이익을 주어 모델이 같은 줄을 그대로 반복할 가능성을 낮춰줍니다.</li>
+</ul>
+</li>
+<li>logit_bias
+<ul>
+<li>완료에 지정된 토큰이 표시될 가능성을 수정. 토큰(토큰화기에서 토큰 ID로 지정)을 -100에서 100 사이의 연관된 바이어스 값에 매핑하는 json 객체를 받습니다. 수학적으로 바이어스는 샘플링 전에 모델에서 생성된 로그에 추가되며, 정확한 효과는 모델마다 다르지만 -1에서 1 사이의 값은 선택 가능성을 줄이거나 늘리고, -100 또는 100과 같은 값은 관련 토큰을 금지하거나 독점적으로 선택하게 됩니다.</li>
+</ul>
+</li>
+<li>user
+<ul>
+<li>character. 최종 사용자를 나타내는 고유 식별자로, OpenAI가 악용을 모니터링하고 감지하는 데 도움이 될 수 있습니다.</li>
+</ul>
+</li>
 <li>type
 <ul>
-<li>character. 반환하는 결과 타입입니다. “text”, “console”, “viewer”에서 선택하며, 기본값인 “text”는 텍스트를, “console”는 R 콘솔에 프린트 아웃되며, “viewer”는 HTML 포맷으로 브라우저에 출력됩니다. 만약 결과에 R 코드가 chunk로 포함되어 있다면, 코드가 실행된 결과도 HTML 문서에 포함됩니다.</li>
+<li>character. 반환하는 결과 타입. “messages”, “console”, “viewer”에서 선택하며, 기본값인 “messages”는 결과를 assistant 컴포넌트에 추가한 messages 객체를 반환합니다. “console”는 R 콘솔에 프린트 아웃되며, “viewer”는 HTML 포맷으로 브라우저에 출력됩니다. 만약 결과에 R 코드가 chunk로 포함되어 있다면, 코드가 실행된 결과도 HTML 문서에 포함됩니다.</li>
 </ul>
 </li>
 <li>openai_api_key
@@ -256,74 +305,238 @@
 <p><strong>몇가지 방법으로의 채팅을 수행해 보겠습니다.</strong></p>
 </div>
 <div class="section level3">
-<h3 id="type--text">type = “text”<a class="anchor" aria-label="anchor" href="#type--text"></a>
-</h3>
-<p>이 방법은 반환받은 텍스트 데이터를 사후에 가공하여 활용할 때 유용한 방법입니다.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"R의 가장 큰 장점은 무엇일까?."</span>, <span class="at">type =</span> <span class="st">"text"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"</span><span class="sc">\n\n</span><span class="st">R의 가장 큰 장점은 다양한 통계 분석 기능과 그래프 그리기 기능이 있다는 것입니다. </span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="st">또한 R은 오픈소스 소프트웨어이므로 무료로 이용할 수 있으며, 데이터 전처리 및 분석에 있어서 다양한 패키지나 </span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="st">라이브러리를 제공하여 효과적인 해결책을 제공할 수 있습니다. </span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="st">또한 R은 데이터 시각화에 강점을 가지고 있어, 데이터의 시각화 및 결과의 시각화가 수월합니다. </span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="st">또한 R은 다양한 데이터 형태를 지원하므로, 대용량 데이터셋에서도 빠르게 처리할 수 있습니다. </span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="st">따라서 R은 데이터 분석 분야에서 매우 유용한 도구이며, 통계분석 전문가 및 데이터 분석가들에게 필수적인 도구로 인식되고 있습니다."</span></span></code></pre></div>
-</div>
-<div class="section level3">
 <h3 id="type--console">type = “console”<a class="anchor" aria-label="anchor" href="#type--console"></a>
 </h3>
-<p>이 방법은 <code>chatGPT</code>와 질문과 답변의 대화를 이어나갈 때 유용한 방법입니다.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"안녕, 반가워."</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>안녕하세요<span class="sc">!</span> 저는 AI 어시스턴트입니다. 무엇을 도와드릴까요?</span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"네 이름은 뭐니?"</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>제 이름은 OpenAI Assistive입니다. 저는 OpenAI의 인공지능 어시스턴트입니다.</span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"미세먼지가 많은 날은 어떻게 준비해야할까?"</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
+<p>이 방법은 <code>message</code> 객체의 결과를 좀더 보기 좋게 콘솔에 출력할 때 사용합니다.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"네 이름은 뭐니?"</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>══ Chat with chatGPT ══════════════════════════════════════════════════════ user ══</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>네 이름은 뭐니?</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>══ Chat with chatGPT ═════════════════════════════════════════════════ assistant ══</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>제 이름은 OpenAI Assistive입니다. 저는 OpenAI의 인공지능 어시스턴트입니다.</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"미세먼지가 많은 날은 어떻게 준비해야할까?"</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>══ Chat with chatGPT ══════════════════════════════════════════════════════ user ══</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>미세먼지가 많은 날은 어떻게 준비해야할까?</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>══ Chat with chatGPT ═════════════════════════════════════════════════ assistant ══</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>미세먼지가 많은 날에는 다음과 같은 준비를 하면 좋습니다.</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fl">1.</span> 마스크 착용 <span class="sc">:</span> 미세먼지를 막기 위해 마스크를 착용해야 합니다. 미세먼지가 심한 날에는 KF94 등급 이상의 마스크를 선택해야 합니다.</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fl">2.</span> 실내 환기 방지 <span class="sc">:</span> 실내 공기를 집중적으로 정화하기 위해 창문, 문을 닫고 에어컨, 공기청정기를 돌리는 것이 좋습니다.</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fl">3.</span> 외출 제한 <span class="sc">:</span> 미세먼지 농도가 매우 높은 날에는 가능한 실내에서 활동을 하는 것이 좋으며, 외출이 필요한 경우에는 마스크를 꼭 착용해야 합니다.</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fl">4.</span> 적정한 수분 섭취 <span class="sc">:</span> 미세먼지로 인해 목이 건조해지는 경우가 많으므로, 충분한 수분을 섭취해 목을 적정한 상태로 유지해야 합니다.</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="fl">5.</span> 눈 건강 보호 <span class="sc">:</span> 미세먼지는 눈에도 영향을 미칠 수 있으므로, 안경이나 눈을 보호할 수 있는 고글을 착용하는 것이 좋습니다. 두통, 결막염 등이 있는 경우 병원 선생님 상담을 권장합니다.</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"근의 공식을 설명해줘"</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>══ Chat with chatGPT ══════════════════════════════════════════════════════ user ══</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>미세먼지가 많은 날은 어떻게 준비해야할까?</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>══ Chat with chatGPT ═════════════════════════════════════════════════ assistant ══</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>근의 공식은 다음과 같습니다.</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>ax<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> bx <span class="sc">+</span> c <span class="ot">=</span> <span class="dv">0</span> (a ≠ <span class="dv">0</span>)라는 이차방정식이 주어졌을 때, 이 방정식의 근은 다음과 같은 공식을 이용하여 계산할 수 있습니다.</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> (<span class="sc">-</span>b ± √(b<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> 4ac)) <span class="sc">/</span> 2a</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>여기에서,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> b는 이차항의 계수이며, x에 곱해진 계수의 합을 의미합니다.</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> a는 이차항의 계수입니다.</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> c는 상수항의 값입니다.</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> √는 루트 기호를 나타냅니다.</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> ±는 양수와 음수를 의미하는데, 이는 두 개의 식이 나올 수 있음을 나타냅니다.</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>이 공식을 이용하여 이차방정식의 근을 쉽게 구할 수 있습니다. 하지만 이 공식은 근의 개수에 따라 근의 실수, 허수, 중근 등으로 나눠져 있기 때문에 근을 구하기 전에 해당 방정식의 근의 개수가 어떤지 판별해야 합니다.</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"피타고라스의 정리는 무엇이지?"</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>미세먼지가 많은 날에는 다음과 같은 준비를 하면 좋습니다.</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fl">1.</span> 마스크 착용 <span class="sc">:</span> 미세먼지를 막기 위해 마스크를 착용해야 합니다. 미세먼지가 심한 날에는 KF94 등급 이상의 마스크를 선택해야 합니다.</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fl">2.</span> 실내 환기 방지 <span class="sc">:</span> 실내 공기를 집중적으로 정화하기 위해 창문, 문을 닫고 에어컨, 공기청정기를 돌리는 것이 좋습니다.</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fl">3.</span> 외출 제한 <span class="sc">:</span> 미세먼지 농도가 매우 높은 날에는 가능한 실내에서 활동을 하는 것이 좋으며, 외출이 필요한 경우에는 마스크를 꼭 착용해야 합니다.</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="fl">4.</span> 적정한 수분 섭취 <span class="sc">:</span> 미세먼지로 인해 목이 건조해지는 경우가 많으므로, 충분한 수분을 섭취해 목을 적정한 상태로 유지해야 합니다.</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="fl">5.</span> 눈 건강 보호 <span class="sc">:</span> 미세먼지는 눈에도 영향을 미칠 수 있으므로, 안경이나 눈을 보호할 수 있는 고글을 착용하는 것이 좋습니다. 두통, 결막염 등이 있는 경우 병원 선생님 상담을 권장합니다.</span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"근의 공식을 설명해줘"</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>근의 공식은 다음과 같습니다.</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>ax<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> bx <span class="sc">+</span> c <span class="ot">=</span> <span class="dv">0</span> (a ≠ <span class="dv">0</span>)라는 이차방정식이 주어졌을 때, 이 방정식의 근은 다음과 같은 공식을 이용하여 계산할 수 있습니다.</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> (<span class="sc">-</span>b ± √(b<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> 4ac)) <span class="sc">/</span> 2a</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>피타고라스의 정리는 직각삼각형에서 빗변의 제곱이 나머지 두 변의 제곱의 합과 같다는 정리이다. 즉, <span class="sc">$</span>a<span class="sc">^</span><span class="dv">2</span><span class="sc">+</span>b<span class="sc">^</span><span class="dv">2</span><span class="ot">=</span>c<span class="sc">^</span><span class="dv">2</span><span class="sc">$</span>로 표현된다. 이러한 정리는 수학뿐만 아니라 공학, 물리학 등 다양한 분야에서 활용된다.</span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="type--messages">type = “messages”<a class="anchor" aria-label="anchor" href="#type--messages"></a>
+</h3>
+<p>이 방법은 질문과 답을 서로 주고 받는 채팅을 구현할 때 유용합니다. 왜냐하면 반환하는 <code>messages</code> 객체에는 주고 받은 메시지와 메시지에 대한 role이 리스트로 들어 있기 때문입니다.</p>
+<p>bitGPT 패키지는 <code>messages</code> 객체를 핸들링하기 위한 다음의 함수(메소드)를 지원합니다.</p>
+<ul>
+<li>create_messages()
+<ul>
+<li>메시지 객체 생성</li>
+</ul>
+</li>
+<li>add()
+<ul>
+<li>메시지 객체에 메시지 추가</li>
+</ul>
+</li>
+<li>show()
+<ul>
+<li>메시지 객체의 메시지 조회</li>
+</ul>
+</li>
+</ul>
+<p>다음은 단일 메시지의 사례입니다.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"R의 가장 큰 장점은 무엇일까?."</span>, <span class="at">type =</span> <span class="st">"text"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">1</span>]]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">1</span>]]<span class="sc">$</span>role</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"user"</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">1</span>]]<span class="sc">$</span>content</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"R의 가장 큰 장점은 무엇일까?."</span></span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>여기에서,</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> b는 이차항의 계수이며, x에 곱해진 계수의 합을 의미합니다.</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> a는 이차항의 계수입니다.</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> c는 상수항의 값입니다.</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> √는 루트 기호를 나타냅니다.</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> ±는 양수와 음수를 의미하는데, 이는 두 개의 식이 나올 수 있음을 나타냅니다.</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">2</span>]]</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">2</span>]]<span class="sc">$</span>role</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"assistant"</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">2</span>]]<span class="sc">$</span>content</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"R의 가장 큰 장점은 데이터 분석과 시각화를 위한 강력한 도구들이 풍부하게 제공된다는 것입니다. R은 무료로 제공되는 오픈소스 소프트웨어로서, 다양한 패키지와 라이브러리를 활용하여 다양한 분석 및 시각화 기능을 구현할 수 있습니다. 이는 데이터 과학자 및 통계학자들이 데이터를 보다 쉽고 빠르게 분석, 시각화하며, 데이터에 포함된 패턴 및 트렌드를 쉽게 파악할 수 있다는 장점을 가지고 있습니다. 추가적으로 R은 통계학적 측면에서 강하며, 통계 분석 및 모델링을 위한 강력한 기능들을 제공하고 있습니다. 이는 데이터 과학 분야에서 매우 유용하다고 할 수 있습니다."</span></span>
 <span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>이 공식을 이용하여 이차방정식의 근을 쉽게 구할 수 있습니다. 하지만 이 공식은 근의 개수에 따라 근의 실수, 허수, 중근 등으로 나눠져 있기 때문에 근을 구하기 전에 해당 방정식의 근의 개수가 어떤지 판별해야 합니다.</span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">chat_completion</span>(<span class="st">"피타고라스의 정리는 무엇이지?"</span>, <span class="at">type =</span> <span class="st">"console"</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>피타고라스의 정리는 직각삼각형에서 빗변의 제곱이 나머지 두 변의 제곱의 합과 같다는 정리이다. 즉, <span class="sc">$</span>a<span class="sc">^</span><span class="dv">2</span><span class="sc">+</span>b<span class="sc">^</span><span class="dv">2</span><span class="ot">=</span>c<span class="sc">^</span><span class="dv">2</span><span class="sc">$</span>로 표현된다. 이러한 정리는 수학뿐만 아니라 공학, 물리학 등 다양한 분야에서 활용된다.</span></code></pre></div>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"class"</span>)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"messages"</span> <span class="st">"list"</span> </span></code></pre></div>
+<p><code>messages</code> 객체를 만들어서 채팅을 수행하려 합니다.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="co"># 메시지 객체로 메시지를 정의하는 사례</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="er">&gt;</span> msg <span class="ot">&lt;-</span> <span class="fu">create_messages</span>(<span class="at">user =</span> <span class="st">"R을 이용한 통계학의 이해 커리큘럼을 부탁해"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="sc">+</span>                        <span class="at">system =</span> <span class="st">"assistant는 R을 이용해서 통계학을 가르치는 강사입니다."</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="co"># 메시지 객체로 반환</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="er">&gt;</span> answer <span class="ot">&lt;-</span> <span class="fu">chat_completion</span>(msg, <span class="at">type =</span> <span class="st">"messages"</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> answer</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">1</span>]]</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">1</span>]]<span class="sc">$</span>role</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"system"</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">1</span>]]<span class="sc">$</span>content</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"assistant는 R을 이용해서 통계학을 가르치는 강사입니다."</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">2</span>]]</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">2</span>]]<span class="sc">$</span>role</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"user"</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">2</span>]]<span class="sc">$</span>content</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"R을 이용한 통계학의 이해 커리큘럼을 부탁해"</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">3</span>]]</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">3</span>]]<span class="sc">$</span>role</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"assistant"</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>[[<span class="dv">3</span>]]<span class="sc">$</span>content</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"R을 이용한 통계학 커리큘럼입니다.</span><span class="sc">\n\n</span><span class="st">1. 기초 통계 이해</span><span class="sc">\n</span><span class="st">- 기술통계학: 중심 경향성, 분산, 표준편차 등</span><span class="sc">\n</span><span class="st">- 추론통계학: 가설검정, 신뢰구간, p-value 등</span><span class="sc">\n</span><span class="st">- 확률의 이해: 확률의 정의, 덧셈과 곱셈 법칙 등</span><span class="sc">\n\n</span><span class="st">2. R 환경 구축 및 R 기초 문법 학습</span><span class="sc">\n</span><span class="st">- R 환경 구축: R 설치, RStudio 구축 등</span><span class="sc">\n</span><span class="st">- R 기초 문법 학습: 변수, 함수, 벡터, 행렬 등</span><span class="sc">\n\n</span><span class="st">3. 데이터 분석과 시각화</span><span class="sc">\n</span><span class="st">- 데이터 전처리: 결측치, 이상치 처리 등</span><span class="sc">\n</span><span class="st">- 데이터 시각화: 히스토그램, 막대그래프, 산점도 등</span><span class="sc">\n</span><span class="st">- 통계 분석: 선형 회귀, 로지스틱 회귀, ANOVA, t-test 등</span><span class="sc">\n\n</span><span class="st">4. 실제 데이터를 이용한 프로젝트 수행</span><span class="sc">\n</span><span class="st">- 데이터 수집 및 전처리: 온라인 데이터, 공공데이터 등 사용</span><span class="sc">\n</span><span class="st">- 데이터 시각화 및 분석: 주제에 따라 여러 분석 기법 사용</span><span class="sc">\n</span><span class="st">- 보고서 작성: 분석 결과 해석 및 결론 도출</span><span class="sc">\n\n</span><span class="st">위 커리큘럼을 기반으로 강의를 진행하면, 학생들은 R을 이용한 통계 데이터 분석 및 시각화에 대한 전반적인 이해를 할 수 있게 됩니다."</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(,<span class="st">"class"</span>)</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"messages"</span> <span class="st">"list"</span>   </span></code></pre></div>
+<p><code>show()</code> 함수를 이용하면 보기좋게 메시지를 살펴볼 수 있습니다.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">show</span>(answer)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>══ Chat with chatGPT ════════════════════════════════════════════════════ system ══</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>assistant는 R을 이용해서 통계학을 가르치는 강사입니다.</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>══ Chat with chatGPT ══════════════════════════════════════════════════════ user ══</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>R을 이용한 통계학의 이해 커리큘럼을 부탁해</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>══ Chat with chatGPT ═════════════════════════════════════════════════ assistant ══</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>R을 이용한 통계학 커리큘럼입니다.</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="fl">1.</span> 기초 통계 이해</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 기술통계학<span class="sc">:</span> 중심 경향성, 분산, 표준편차 등</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 추론통계학<span class="sc">:</span> 가설검정, 신뢰구간, p<span class="sc">-</span>value 등</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 확률의 이해<span class="sc">:</span> 확률의 정의, 덧셈과 곱셈 법칙 등</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="fl">2.</span> R 환경 구축 및 R 기초 문법 학습</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> R 환경 구축<span class="sc">:</span> R 설치, RStudio 구축 등</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> R 기초 문법 학습<span class="sc">:</span> 변수, 함수, 벡터, 행렬 등</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="fl">3.</span> 데이터 분석과 시각화</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 데이터 전처리<span class="sc">:</span> 결측치, 이상치 처리 등</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 데이터 시각화<span class="sc">:</span> 히스토그램, 막대그래프, 산점도 등</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 통계 분석<span class="sc">:</span> 선형 회귀, 로지스틱 회귀, ANOVA, t<span class="sc">-</span>test 등</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="fl">4.</span> 실제 데이터를 이용한 프로젝트 수행</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 데이터 수집 및 전처리<span class="sc">:</span> 온라인 데이터, 공공데이터 등 사용</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 데이터 시각화 및 분석<span class="sc">:</span> 주제에 따라 여러 분석 기법 사용</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 보고서 작성<span class="sc">:</span> 분석 결과 해석 및 결론 도출</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>위 커리큘럼을 기반으로 강의를 진행하면, 학생들은 R을 이용한 통계 데이터 분석 및 시각화에 대한 전반적인 이해를 할 수 있게 됩니다.</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="type--viewer">type = “viewer”<a class="anchor" aria-label="anchor" href="#type--viewer"></a>
 </h3>
 <p>이 방법은 답변의 결과에 R 코드가 포함되어 있을 때 유용합니다. 반환된 결과를 R 마크다운으로 수행하여 HTML로 만든 후 브라우저에 띄워줍니다.</p>
 <p>다만, 경우에 따라서 답변의 결과 포함된 R 코드가 실행 중에 에러가 발생할 수 있는 불완전한 Pseudo 코드일 수 있습니다.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">messages</span> <span class="op">&lt;-</span> <span class="st">"mtcars 데이터를 ggplot2 패키지로 wt 변수와 mpg 변수를 EDA하는 R 스크립트를 짜줘."</span></span>
-<span></span>
-<span><span class="co"># HTML 포맷으로 브라우저에 출력</span></span>
-<span><span class="fu"><a href="reference/chat_completion.html">chat_completion</a></span><span class="op">(</span><span class="va">messages</span>, type <span class="op">=</span> <span class="st">"viewer"</span><span class="op">)</span></span></code></pre></div>
+<p>앞서 chatGPT assistant의 답변에 부족함이 보여서, 커리큘럼에 tidyverse 패키지에 대한 내용을 추가하려 합니다. 그래서 <code><a href="reference/create_messages.html">add()</a></code> 함수로 이전 질문의 결과에 추가 질문을 추가합니다.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 반환받은 메시지 객체에 질의를 위한 user role의 메시지 추가</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> msg <span class="ot">&lt;-</span> <span class="fu">add</span>(answer, <span class="at">user =</span> <span class="st">"커리큘럼에 tidyverse 패키지를 사용하는 방법을 추가해줘."</span>)</span></code></pre></div>
+<p>추가된 질문은 type 인수를 “viewer”로 설정하였습니다. 그래서 브라우저로 결과가 출력되겠지만, 할당 연산자를 이용해서 결과인 <code>message</code> 객체를 저장해둘 수도 있습니다.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 이전 메시지를 포함하여 추가 질의</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> answer2 <span class="ot">&lt;-</span> <span class="fu">chat_completion</span>(msg, <span class="at">type =</span> <span class="st">"viewer"</span>)</span></code></pre></div>
+<p>이 코드가 실행되면, 다음 그림처럼 메시지들이 웹 브라우저에 출력됩니다.</p>
 <figure><img src="reference/figures/chat_down.png" style="width:80.0%" alt="결과의 HTML 프라우징 화면"><figcaption aria-hidden="true">
 결과의 HTML 프라우징 화면
-</figcaption></figure>
+</figcaption></figure><p>할당해 두었던 <code>message</code> 객체인 answer2를 다음처럼 <code>show()</code> 함수로 보기 좋게 출력할 수도 있고, 메시지를 추가해서 다시 질의할 수도 있습니다.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">show</span>(answer2)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>══ Chat with chatGPT ════════════════════════════════════════════════════ system ══</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>assistant는 R을 이용해서 통계학을 가르치는 강사입니다.</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>══ Chat with chatGPT ══════════════════════════════════════════════════════ user ══</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>R을 이용한 통계학의 이해 커리큘럼을 부탁해</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>══ Chat with chatGPT ═════════════════════════════════════════════════ assistant ══</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>R을 이용한 통계학 커리큘럼입니다.</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="fl">1.</span> 기초 통계 이해</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 기술통계학<span class="sc">:</span> 중심 경향성, 분산, 표준편차 등</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 추론통계학<span class="sc">:</span> 가설검정, 신뢰구간, p<span class="sc">-</span>value 등</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 확률의 이해<span class="sc">:</span> 확률의 정의, 덧셈과 곱셈 법칙 등</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="fl">2.</span> R 환경 구축 및 R 기초 문법 학습</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> R 환경 구축<span class="sc">:</span> R 설치, RStudio 구축 등</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> R 기초 문법 학습<span class="sc">:</span> 변수, 함수, 벡터, 행렬 등</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="fl">3.</span> 데이터 분석과 시각화</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 데이터 전처리<span class="sc">:</span> 결측치, 이상치 처리 등</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 데이터 시각화<span class="sc">:</span> 히스토그램, 막대그래프, 산점도 등</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 통계 분석<span class="sc">:</span> 선형 회귀, 로지스틱 회귀, ANOVA, t<span class="sc">-</span>test 등</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="fl">4.</span> 실제 데이터를 이용한 프로젝트 수행</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 데이터 수집 및 전처리<span class="sc">:</span> 온라인 데이터, 공공데이터 등 사용</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 데이터 시각화 및 분석<span class="sc">:</span> 주제에 따라 여러 분석 기법 사용</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 보고서 작성<span class="sc">:</span> 분석 결과 해석 및 결론 도출</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>위 커리큘럼을 기반으로 강의를 진행하면, 학생들은 R을 이용한 통계 데이터 분석 및 시각화에 대한 전반적인 이해를 할 수 있게 됩니다.</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>══ Chat with chatGPT ══════════════════════════════════════════════════════ user ══</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>커리큘럼에 tidyverse 패키지를 사용하는 방법을 추가해줘.</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>══ Chat with chatGPT ═════════════════════════════════════════════════ assistant ══</span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>물론입니다. tidyverse 패키지는 데이터 처리 및 시각화를 용이하게 해주는 많은 패키지를 포함합니다. 아래 커리큘럼에 tidyverse 패키지를 추가하겠습니다.</span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a><span class="fl">1.</span> 기초 통계 이해</span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 기술통계학<span class="sc">:</span> 중심 경향성, 분산, 표준편차 등</span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 추론통계학<span class="sc">:</span> 가설검정, 신뢰구간, p<span class="sc">-</span>value 등</span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 확률의 이해<span class="sc">:</span> 확률의 정의, 덧셈과 곱셈 법칙 등</span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a><span class="fl">2.</span> R 환경 구축 및 R 기초 문법 학습</span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> R 환경 구축<span class="sc">:</span> R 설치, RStudio 구축 등</span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> R 기초 문법 학습<span class="sc">:</span> 변수, 함수, 벡터, 행렬 등</span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a><span class="fl">3.</span> 데이터 처리와 시각화</span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> tidyverse 패키지<span class="sc">:</span> dplyr, ggplot2 등의 패키지를 활용한 데이터 처리와 시각화 기법</span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 데이터 전처리<span class="sc">:</span> 결측치, 이상치 처리 등</span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 데이터 시각화<span class="sc">:</span> 히스토그램, 막대그래프, 산점도 등</span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a><span class="fl">4.</span> 통계 분석과 적용</span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 통계 분석<span class="sc">:</span> 선형 회귀, 로지스틱 회귀, ANOVA, t<span class="sc">-</span>test 등</span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 실제 데이터 분석<span class="sc">:</span> tidyverse 패키지와 통계 분석을 활용한 실제 데이터 분석</span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a><span class="fl">5.</span> 실제 데이터를 이용한 프로젝트 수행</span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 데이터 수집 및 전처리<span class="sc">:</span> 온라인 데이터, 공공데이터 등 사용</span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 데이터 시각화 및 분석<span class="sc">:</span> 주제에 따라 여러 분석 기법 사용</span>
+<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span> 보고서 작성<span class="sc">:</span> 분석 결과 해석 및 결론 도출</span>
+<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-61"><a href="#cb18-61" aria-hidden="true" tabindex="-1"></a>위 커리큘럼을 활용하여 tidyverse 패키지를 사용한 데이터 처리와 시각화 기법을 학생들이 배울 수 있습니다. 이를 통해 데이터 분석에 대한 이해도가 높아질 것입니다.</span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -334,7 +547,7 @@
 </h3>
 <p><code>chatGPT</code>를 이용해서, 생성할 이미지를 설명하는 프롬프트에 부합하는 이미지를 생성할 수 있습니다.</p>
 <p>여러분은 다음의 <code><a href="reference/draw_img.html">draw_img()</a></code>로 원하는 그림을 그리는 화가가 될 수 있습니다.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/draw_img.html">draw_img</a></span><span class="op">(</span></span>
 <span>  <span class="va">prompt</span>,</span>
 <span>  ko2en <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -401,15 +614,15 @@
 </ul>
 <p><strong>빈센트 반 고흐 스타일로 해변에서의 일출과 갈매기를 그려보겠습니다.</strong></p>
 <p>영어 프롬프트로 그림을 그립니다. <code>ko2en</code> 인수값은 FALSE로 지정합니다. 이 예제는 그려진 이미지에 접근할 수 있는 URL을 반환합니다.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prompt_en</span> <span class="op">&lt;-</span> <span class="st">"Draw a sunrise and a seagull in Vincent van Gogh style."</span></span>
 <span><span class="fu"><a href="reference/draw_img.html">draw_img</a></span><span class="op">(</span><span class="va">prompt_en</span>, ko2en <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p>한글 프롬프트로 그림을 그립니다. 그려진 결과는 R 플롯으로 반환되므로 RStudio 환경이라면, <code>Plots</code> 패널에서 확인할 수 있습니다.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prompt_ko</span> <span class="op">&lt;-</span> <span class="st">"빈센트 반 고흐 스타일로 일출과 갈매기를 그려줘"</span></span>
 <span><span class="fu"><a href="reference/draw_img.html">draw_img</a></span><span class="op">(</span><span class="va">prompt_ko</span>, type <span class="op">=</span> <span class="st">"image"</span><span class="op">)</span></span></code></pre></div>
 <p>파일로 출력하고 싶다면 <code>type</code>의 값을 “file”로 지정합니다. 파일의 경로와 이름을 지정하지 않았기 때문에, 현재의 working directory에 “aidrawing.png”라는 이름으로 생성됩니다.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/draw_img.html">draw_img</a></span><span class="op">(</span><span class="va">prompt_ko</span>, type <span class="op">=</span> <span class="st">"file"</span><span class="op">)</span></span></code></pre></div>
 <p>그리는 그림의 모양은 매번 달라집니다. 다음은 고흐가 그린 일출과 갈매기 작품입니다.</p>
 <p><img src="reference/figures/gogh_01.png" style="width:60.0%;height:60.0%" alt="고흐풍 드로잉"><img src="reference/figures/gogh_02.png" style="width:60.0%;height:60.0%" alt="고흐풍 드로잉"><img src="reference/figures/aidrawing.png" style="width:60.0%;height:60.0%" alt="고흐풍 드로잉"></p>
@@ -419,7 +632,7 @@
 </h3>
 <p><code>chatGPT</code>를 이용해서, 이미지를 편집할 수 있습니다.</p>
 <p>여러분은 다음의 <code><a href="reference/draw_img_edit.html">draw_img_edit()</a></code>로 원하는 이미지의 특정 부분을 퍈집할 수 있습니다. 함수의 인수는 <code><a href="reference/draw_img_variation.html">draw_img_variation()</a></code>와 거의 유사합니다. <code>image</code> 인수에 편집할 원래의 이미지 파일을, mask에 편집할 부분을 선택하는(mask) 이미지 파일을 지정하면 됩니다. 그리고 prompt에는 편집할 부분의 편집 내용을 기술합니다.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/draw_img_edit.html">draw_img_edit</a></span><span class="op">(</span></span>
 <span>  <span class="va">image</span>,</span>
 <span>  <span class="va">mask</span>,</span>
@@ -503,7 +716,7 @@
 <figure><img src="inst/images/cloud_mask.png" style="width:60.0%;height:60.0%" alt="마스크 이미지"><figcaption aria-hidden="true">
 마스크 이미지
 </figcaption></figure><p>“cloud.png” 이미지 파일을 편집해 보겠습니다.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 편집할 이미지</span></span>
 <span><span class="va">image</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"images"</span>, <span class="st">"cloud.png"</span>, package <span class="op">=</span> <span class="st">"bitGPT"</span><span class="op">)</span></span>
 <span></span>
@@ -521,7 +734,7 @@
 </h3>
 <p><code>chatGPT</code>를 이용해서, 이미지를 변형할 수 있습니다.</p>
 <p>여러분은 다음의 <code><a href="reference/draw_img_variation.html">draw_img_variation()</a></code>로 원하는 이미지를 유사하게 다른 이미지를 변형할 수 있습니다. 함수의 인수는 <code><a href="reference/draw_img.html">draw_img()</a></code>와 거의 유사합니다. <code>image</code> 인수에 변형하고자 할 원래의 이미지 파일을 지정하면 됩니다.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/draw_img_variation.html">draw_img_variation</a></span><span class="op">(</span></span>
 <span>  <span class="va">image</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">1L</span>,</span>
@@ -533,7 +746,7 @@
 <span>  openai_api_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"OPENAI_API_KEY"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>앞에서 소개한 “cloud.png” 이미지 파일을 변형해 보겠습니다.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 변형할 이미지</span></span>
 <span><span class="va">image</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"images"</span>, <span class="st">"cloud.png"</span>, package <span class="op">=</span> <span class="st">"bitGPT"</span><span class="op">)</span></span>
 <span></span>
@@ -551,7 +764,7 @@
 </h3>
 <p><code>chatGPT</code>를 이용해서, 음성 오디오 파일로 STT(Speech to Text )를 수행합니다.</p>
 <p>여러분은 <code><a href="reference/transcript_audio.html">transcript_audio()</a></code>로 STT를 수행할 수 있습니다.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/transcript_audio.html">transcript_audio</a></span><span class="op">(</span></span>
 <span>  <span class="va">file</span>,</span>
 <span>  language <span class="op">=</span> <span class="st">"ko"</span>,</span>
@@ -575,23 +788,23 @@
 </li>
 </ul>
 <p><code>bitGPT</code> 패키지에는 “korea_r_user.m4a” 파일을 제공하고 있습니다. 이 파일은 <code>한국R사용자회</code> 소개하는 짧은 음성파일입니다. 성능이 좋지 않는 스피치의 텍스트 전환의 성능을 판단하기 위해서, 스피치의 성능은 높지 않게 생성했습니다. 잘못 발음하여 다시 발음하거나, 문장내에서 띄어 읽는 부분이 부자연스러운 곳도 있습니다.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># 음성 오디오 파일</span></span>
 <span><span class="va">speech</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"audios"</span>, <span class="st">"korea_r_user.m4a"</span>, package <span class="op">=</span> <span class="st">"bitGPT"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 음성 오디오를 텍스트로 전환</span></span>
 <span><span class="fu"><a href="reference/transcript_audio.html">transcript_audio</a></span><span class="op">(</span><span class="va">speech</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">text</span> </span>
 <span><span class="st">"사단법인 한국R 사용자예는 디지털 분평 등 해소와 통계 대중화를 위해 2020년 설립되었습니다. </span></span>
 <span><span class="st">오픈 통계 패키지 개발을 비롯하여 최근에 통계 및 데이터 과학 관련 오픈 전자책도 함께 제작하여 발간하고 있습니다. </span></span>
 <span><span class="st">통계 패키지와 통계 및 데이터 과학 책은 사용자의 회원들의 자발적인 참여로 개발 및 유지 보수되고 있습니다. </span></span>
 <span><span class="st">데이터 과학 분야의 인공지능 ai 체질 비트와 공존을 본격적으로 탐색하기 시작했습니다."</span> </span></code></pre></div>
 <p>스피치의 대상이 되는 원문 문장은 다음과 같습니다.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>사단법인 한국 R 사용자회는 디지털 불평등 해소와 통계 대중화를 위해 2022년 설립되었습니다. </span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>오픈 통계 패키지 개발을 비롯하여 최근에 통계 및 데이터 과학 관련 오픈 전자책도 함께 제작하여 발간하고 있습니다. </span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>통계 패키지와 통계 및 데이터 과학 전자책은 사용자회 회원들의 자발적인 참여로 개발 및 유지보수 되고 있습니다. </span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>데이터 과학 분야 인공지능 AI chatGPT와 공존을 본격적으로 탐색하기 시작했습니다. </span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>사단법인 한국 R 사용자회는 디지털 불평등 해소와 통계 대중화를 위해 2022년 설립되었습니다. </span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>오픈 통계 패키지 개발을 비롯하여 최근에 통계 및 데이터 과학 관련 오픈 전자책도 함께 제작하여 발간하고 있습니다. </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>통계 패키지와 통계 및 데이터 과학 전자책은 사용자회 회원들의 자발적인 참여로 개발 및 유지보수 되고 있습니다. </span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>데이터 과학 분야 인공지능 AI chatGPT와 공존을 본격적으로 탐색하기 시작했습니다. </span></code></pre></div>
 </div>
 </div>
 </div>

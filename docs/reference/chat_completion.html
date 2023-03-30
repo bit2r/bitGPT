@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bitGPT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.5.9000</span>
       </span>
     </div>
 
@@ -66,7 +66,7 @@
 <span>  frequency_penalty <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  logit_bias <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  user <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"text"</span>, <span class="st">"console"</span>, <span class="st">"viewer"</span>, <span class="st">"messages"</span><span class="op">)</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"messages"</span>, <span class="st">"console"</span>, <span class="st">"viewer"</span><span class="op">)</span>,</span>
 <span>  openai_api_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"OPENAI_API_KEY"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -139,11 +139,10 @@ character vector의 경우에는 role이 user인 경우의 메시지를 기술�
 
 
 <dt>type</dt>
-<dd><p>character. 반환하는 결과 타입. "text", "console", "viewer", "messages"에서 선택하며,
-기본값인 "text"는 텍스트를, "console"는 R 콘솔에 프린트 아웃되며,
-"viewer"는 HTML 포맷으로 브라우저에 출력됨. 만약 결과에 R 코드가 chunk로 포함되어 있다면,
-코드가 실행된 결과도 HTML 문서에 포함됨.
-"messages"는 결과를 assistant 컴포넌트에 추가한 messages 객체를 반환함.</p></dd>
+<dd><p>character. 반환하는 결과 타입. "messages", "console", "viewer"에서 선택하며,
+"messages"는 결과를 assistant 컴포넌트에 추가한 messages 객체를 반환함.
+"console"는 R 콘솔에 프린트 아웃되며, "viewer"는 HTML 포맷으로 브라우저에 출력됨.
+만약 결과에 R 코드가 chunk로 포함되어 있다면, 코드가 실행된 결과도 HTML 문서에 포함됨.</p></dd>
 
 
 <dt>openai_api_key</dt>
@@ -171,7 +170,7 @@ R 코드가 chunk로 포함되어 있을 경우에만, 해당 chunk의 R 코드�
 <span class="r-in"><span><span class="co"># character 벡터로 메시지를 정의하는 사례</span></span></span>
 <span class="r-in"><span><span class="va">messages</span> <span class="op">&lt;-</span> <span class="st">"mtcars 데이터를 ggplot2 패키지로 wt 변수와 mpg 변수를 EDA하는 R 스크립트를 짜줘."</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># 텍스트로 반환</span></span></span>
+<span class="r-in"><span><span class="co"># 메시지 객체로 반환</span></span></span>
 <span class="r-in"><span><span class="fu">chat_completion</span><span class="op">(</span><span class="va">messages</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># R 콘솔에 프린트 아웃</span></span></span>
