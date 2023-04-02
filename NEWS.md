@@ -1,4 +1,17 @@
-# bitGPT 0.3.5.9000
+# bitGPT 0.3.6.9001
+
+## NEW FEATURES
+
+* 사용자가 R 콘솔에서 채팅을 수행하는 용도의 함수. (#25, thanks to HelloDataScience). 
+    - keep_completion() 
+* messages 객체에서 마지막 질문과 답변 추출 함수. (#27). 
+    - last()
+* 패키지 environment의 채팅 messages 객체 추출 함수. (#29)
+    - extract_chat()
+    
+
+
+# bitGPT 0.3.5.
 
 ## MINOR CHANGES
 

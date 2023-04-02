@@ -166,3 +166,23 @@ regist_naver_key <- function(client_id = NULL, client_secret = NULL) {
   )
 }
 
+set_gptenv <- function(name, value) {
+  assign(name, value, envir = .bitGPTEnv)
+}
+
+unset_gptenv <- function(name) {
+  value <- get_gptenv(name)
+  if (!is.null(value)) {
+    rm(list = name, envir = .bitGPTEnv)
+  }
+}
+
+get_gptenv <- function(name) {
+  if (missing(name)) {
+    as.list(.bitGPTEnv)
+  } else {
+    .bitGPTEnv[[name]]
+  }
+}
+
+

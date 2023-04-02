@@ -1,3 +1,5 @@
+.bitGPTEnv <- new.env()
+
 .onAttach <- function(libname, pkgname) {
   if (Sys.getenv("OPENAI_API_KEY") == "") {
     api_key <- get_api_key()

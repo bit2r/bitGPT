@@ -11,6 +11,11 @@ show <- function(messages, type = c("console", "viewer"), ...) {
 }
 
 
+#' @export
+last <- function(messages, ...) {
+  UseMethod("last", messages)
+}
+
 #' Create chat messages for chatGPT
 #' @description chatGPT의 chat completion을 수행하기 위한 messages를 생성함
 #' @param user character. user role을 갖는 메시지.
@@ -467,3 +472,46 @@ show.messages <- function(messages, type = c("console", "viewer"), ...) {
     unlink("answer.md")
   }
 }
+
+
+#' Extract last messages from messages object
+#' @description messages 객체에서 마지막 대화를 추출합니다.
+#' @details 채팅을 기능을 구현하기 위해서 마지막 대화만 핸들링하는 경우에 유용합니다.
+#' @examples
+#' \dontrun{
+#' msg <- create_messages(user = "R을 이용한 통계학의 이해 커리큘럼을 부탁해",
+#'                        system = "assistant는 R을 이용해서 통계학을 가르치는 강사입니다.")
+#' show(msg)
+#'
+#' # 메시지 객체로 반환
+#' answer <- chat_completion(msg, type = "messages")
+#' show(answer)
+#'
+#' # 반환받은 메시지 객체에 질의를 위한 user role의 메시지 추가
+#' msg <- add(answer, user = "커리큘럼에 tidyverse 패키지를 사용하는 방법을 추가해줘.")
+#'
+#' # 이전 메시지를 포함하여 추가 질의
+#' answer2 <- chat_completion(msg)
+#' show(answer2)
+#'
+#' last(answer2)
+#' }
+#' @method last messages
+#' @export
+#' @importFrom assertthat assert_that
+last.messages <- function(messages, ...) {
+  if (!is.null(messages)) {
+    assertthat::assert_that(
+      is_messages_object(messages)
+    )
+  }
+
+  n <- length(messages)
+  last_message <- messages[(n-1):n]
+
+  class(last_message) <- c('messages', 'list')
+
+  last_message
+}
+
+
