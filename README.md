@@ -264,7 +264,7 @@ chat_completion(
 ``` r
 > chat_completion("근의 공식을 설명해줘", type = "console")
 ══ Chat with chatGPT ══════════════════════════════════════════════════════ user ══
-미세먼지가 많은 날은 어떻게 준비해야할까?
+근의 공식을 설명해줘
 
 ══ Chat with chatGPT ═════════════════════════════════════════════════ assistant ══
 근의 공식은 다음과 같습니다.
@@ -309,7 +309,7 @@ bitGPT 패키지는 `messages` 객체를 핸들링하기 위한 다음의 함수
 다음은 단일 메시지의 사례입니다.
 
 ``` r
-> chat_completion("R의 가장 큰 장점은 무엇일까?.", type = "text")
+> chat_completion("R의 가장 큰 장점은 무엇일까?.", type = "messages")
 [[1]]
 [[1]]$role
 [1] "user"

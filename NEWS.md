@@ -6,10 +6,14 @@
     - keep_completion() 
 * messages 객체에서 마지막 질문과 답변 추출 함수. (#27). 
     - last()
-* 패키지 environment의 채팅 messages 객체 추출 함수. (#29)
+* 패키지 environment의 채팅 messages 객체 추출 함수. (#29).
     - extract_chat()
     
+## BUG FIX
 
+* README 파일의 오류 수정. (#24, thanks to HelloDataScience).
+
+    
 
 # bitGPT 0.3.5.
 
