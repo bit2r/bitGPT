@@ -446,18 +446,22 @@ show.messages <- function(messages, type = c("console", "viewer"), ...) {
           content <- x[["content"]] %>%
             stringr::str_replace_all("```r", "```{r}")
 
+          file_gear <- system.file("images", "gear.svg", package = "bitGPT")
+          file_user <- system.file("images", "user.svg", package = "bitGPT")
+          file_gpt <- system.file("images", "chatgpt-icon.png", package = "bitGPT")
+
           if (role %in% "system") {
-            cat("<p><span style='font-weight: bold; font-size:15px; color:#A94342'>![](/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/bitGPT/images/gear.svg){#id .class width=4% height=4%} System</span></p>\n\n",
+            cat("<p><span style='font-weight: bold; font-size:15px; color:#A94342'>![](", file_gear, "){#id .class width=4% height=4%} System</span></p>\n\n",
                 file = "answer.Rmd", append = TRUE)
             cat(glue::glue("<div class='alert alert-danger' role='alert'>{content}</div>\n\n"),
                 file = "answer.Rmd", append = TRUE)
           } else if (role %in% "user") {
-            cat("<p><span style='font-weight: bold; font-size:15px; color:#31708F'>![](/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/bitGPT/images/user.svg){#id .class width=4% height=4%} User</span></p>\n\n",
+            cat("<p><span style='font-weight: bold; font-size:15px; color:#31708F'>![](", file_user, "){#id .class width=4% height=4%} User</span></p>\n\n",
                 file = "answer.Rmd", append = TRUE)
             cat(glue::glue("<div class='alert alert-info' role='alert'>{content}</div>\n\n"),
                 file = "answer.Rmd", append = TRUE)
           } else if (role %in% "assistant") {
-            cat("<p><div align='right' style='margin-top:25px; margin-bottom:20px; font-weight: bold; font-size:15px; color:#0BA37F;'>Assistant ![](/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/bitGPT/images/chatgpt-icon.png){#id .class width=3.3% height=3.3%}</div></p>\n\n",
+            cat("<p><div align='right' style='margin-top:25px; margin-bottom:20px; font-weight: bold; font-size:15px; color:#0BA37F;'>Assistant ![](", file_gpt, "){#id .class width=3.3% height=3.3%}</div></p>\n\n",
                 file = "answer.Rmd", append = TRUE)
             cat(glue::glue("<div class='alert alert-success' role='alert'>{content}</div>\n\n"),
                 file = "answer.Rmd", append = TRUE)
