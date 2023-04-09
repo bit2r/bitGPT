@@ -100,16 +100,20 @@ best_of 인수는 많은 완료를 생성하므로 토큰 할당량을 빠르게
 }
 \examples{
 \dontrun{
+prompt_en <- "Tell us the best way to learn R. Include data analysis theories and important R packages to learn."
+prompt_kr <- "최고의 R 학습 방법을 알려주세요. 학습해야할 데이터 분석 이론과 중요한 R 패키지를 포함해 주세요."
 # 텍스트로 반환
 create_completion(
   model = "text-davinci-003",
-  prompt = "나는 R을 이용해서 데이터분석을 가르칩니다."
+  max_tokens = 150,
+  prompt = prompt_kr
 )
 
 create_completion(
   model = "text-davinci-003",
-  prompt = "I teach data analysis using R.",
+  prompt = prompt_kr,
   ko2en = FALSE,
+  max_tokens = 150,
   type = "console"
 )
 
@@ -120,9 +124,10 @@ logit_bias <- list(
 
 create_completion(
   model = "text-davinci-002",
-  prompt = "나는 R을 이용해서 데이터분석을 가르칩니다.",
+  prompt = prompt_kr,
   n = 4,
   best_of = 4,
+  max_tokens = 150,
   logit_bias = logit_bias
 )
 }

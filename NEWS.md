@@ -1,4 +1,4 @@
-# bitGPT 0.3.6.9001
+# bitGPT 0.3.6.9002
 
 ## NEW FEATURES
 
@@ -14,6 +14,10 @@
 * README 파일의 오류 수정. (#24, thanks to HelloDataScience).
 * type = 'viewer' 인수 지정 시 chat_completion() 함수에서 아이콘을 찾지 못하는 오류 수정. (#24, thanks to HelloDataScience).
     
+## MINOR CHANGES
+* create_completion() 도움말 예제 수정. (#30). 
+
+
 
 # bitGPT 0.3.5.
 
