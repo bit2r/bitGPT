@@ -47,13 +47,13 @@ poem <- c(
   "목마는 주인을 버리고 거저 방울 소리만 울리며 가을 속으로 떠났다 술병에서 별이 떨어진다 상심한 별은 내 가슴에 가벼웁게 부서진다"
 )
 
-poem_embddings <- create_embeddings(model = "text-embedding-ada-002", input = poem)
+poem_embeddings <- create_embeddings(model = "text-embedding-ada-002", input = poem)
 
-dim(poem_embddings)
-head(poem_embddings)
+dim(poem_embeddings)
+head(poem_embeddings)
 
 # 코사인 유사도 계산
-poem_embddings \%>\%
+poem_embeddings \%>\%
   lsa::cosine()
 }
 }
