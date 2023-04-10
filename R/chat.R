@@ -385,6 +385,8 @@ chat_completion <- function(messages = NULL,
 #' @param type character. 반환하는 결과 타입. console", "viewer"에서 선택하며,
 #' 기본값인 "console"는 R 콘솔에 프린트 아웃되며, "viewer"는 HTML 포맷으로 브라우저에 출력됨.
 #' 만약 결과에 R 코드가 chunk로 포함되어 있다면, 코드가 실행된 결과도 HTML 문서에 포함됨.
+#' @param is_browse logical. type 인수가 TRUE일 경우에, is_browse가 TRUE이면
+#' 브라우저에 결과가 브라우징되고, FALSE이면 브라우징되지 않음.
 #' @examples
 #' \dontrun{
 #' msg <- create_messages(user = "R을 이용한 통계학의 이해 커리큘럼을 부탁해",
@@ -410,7 +412,7 @@ chat_completion <- function(messages = NULL,
 #' @importFrom stringr str_replace_all
 #' @importFrom cli cli_div cli_rule cli_end
 #' @importFrom glue glue
-show.messages <- function(messages, type = c("console", "viewer"), ...) {
+show.messages <- function(messages, type = c("console", "viewer"), is_browse = TRUE, ...) {
   if (!is.null(messages)) {
     assertthat::assert_that(
       is_messages_object(messages)
@@ -470,8 +472,11 @@ show.messages <- function(messages, type = c("console", "viewer"), ...) {
       )
 
     rmarkdown::render("answer.Rmd")
-    if (interactive()) utils::browseURL("answer.html")
-
+    if (interactive()) {
+      if (is_browse) {
+        utils::browseURL("answer.html")
+      }
+    }
     unlink("answer.Rmd")
     unlink("answer.md")
   }

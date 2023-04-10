@@ -4,7 +4,7 @@
 \alias{show.messages}
 \title{Show chat messages object}
 \usage{
-\method{show}{messages}(messages, type = c("console", "viewer"), ...)
+\method{show}{messages}(messages, type = c("console", "viewer"), is_browse = TRUE, ...)
 }
 \arguments{
 \item{messages}{messages. chatGPT와 chat completion messages 객체.}
@@ -12,6 +12,9 @@
 \item{type}{character. 반환하는 결과 타입. console", "viewer"에서 선택하며,
 기본값인 "console"는 R 콘솔에 프린트 아웃되며, "viewer"는 HTML 포맷으로 브라우저에 출력됨.
 만약 결과에 R 코드가 chunk로 포함되어 있다면, 코드가 실행된 결과도 HTML 문서에 포함됨.}
+
+\item{is_browse}{logical. type 인수가 TRUE일 경우에, is_browse가 TRUE이면
+브라우저에 결과가 브라우징되고, FALSE이면 브라우징되지 않음.}
 }
 \description{
 chatGPT의 chat completion를 위한 messages 객체를 조회함
