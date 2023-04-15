@@ -1,4 +1,13 @@
-# bitGPT 0.3.7.9000
+# bitGPT 0.3.8.9000
+
+## MINOR CHANGES
+
+* show.messages()에 HTML 파일 생성 디렉토리 지정 기능 추가. (#33). 
+    - type = "viewer"일 경우 파일 생성 디렉토리 지정 기능
+    
+    
+    
+# bitGPT 0.3.7.
 
 ## MINOR CHANGES
 

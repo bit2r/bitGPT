@@ -4,7 +4,13 @@
 \alias{show.messages}
 \title{Show chat messages object}
 \usage{
-\method{show}{messages}(messages, type = c("console", "viewer"), is_browse = TRUE, ...)
+\method{show}{messages}(
+  messages,
+  type = c("console", "viewer"),
+  is_browse = TRUE,
+  path = tempdir(),
+  ...
+)
 }
 \arguments{
 \item{messages}{messages. chatGPT와 chat completion messages 객체.}
@@ -15,6 +21,9 @@
 
 \item{is_browse}{logical. type 인수가 TRUE일 경우에, is_browse가 TRUE이면
 브라우저에 결과가 브라우징되고, FALSE이면 브라우징되지 않음.}
+
+\item{{path}}{{character. 브라우징을 위한 HTML 파일을 생성할 Rmd 파일 생성 경로. 기본값은
+R 세션의 TEMP 디렉토리인 tempdir().}}
 }
 \description{
 chatGPT의 chat completion를 위한 messages 객체를 조회함

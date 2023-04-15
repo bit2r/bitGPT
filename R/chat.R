@@ -387,6 +387,8 @@ chat_completion <- function(messages = NULL,
 #' 만약 결과에 R 코드가 chunk로 포함되어 있다면, 코드가 실행된 결과도 HTML 문서에 포함됨.
 #' @param is_browse logical. type 인수가 TRUE일 경우에, is_browse가 TRUE이면
 #' 브라우저에 결과가 브라우징되고, FALSE이면 브라우징되지 않음.
+#' @param {path} {character. 브라우징을 위한 HTML 파일을 생성할 Rmd 파일 생성 경로. 기본값은
+#' R 세션의 TEMP 디렉토리인 tempdir().}
 #' @examples
 #' \dontrun{
 #' msg <- create_messages(user = "R을 이용한 통계학의 이해 커리큘럼을 부탁해",
@@ -412,7 +414,8 @@ chat_completion <- function(messages = NULL,
 #' @importFrom stringr str_replace_all
 #' @importFrom cli cli_div cli_rule cli_end
 #' @importFrom glue glue
-show.messages <- function(messages, type = c("console", "viewer"), is_browse = TRUE, ...) {
+show.messages <- function(messages, type = c("console", "viewer"), is_browse = TRUE,
+                          path = tempdir(), ...) {
   if (!is.null(messages)) {
     assertthat::assert_that(
       is_messages_object(messages)
@@ -436,10 +439,12 @@ show.messages <- function(messages, type = c("console", "viewer"), is_browse = T
         }
       )
   } else if (type %in% "viewer") {
-    cat("---\n", file = "answer.Rmd")
-    cat("title: Chat with chatGPT\n", file = "answer.Rmd", append = TRUE)
-    cat("output: html_document\n", file = "answer.Rmd", append = TRUE)
-    cat("---\n\n", file = "answer.Rmd", append = TRUE)
+    rmdfile <- paste(path, "answer.Rmd", sep = "/")
+
+    cat("---\n", file = rmdfile)
+    cat("title: Chat with chatGPT\n", file = rmdfile, append = TRUE)
+    cat("output: html_document\n", file = rmdfile, append = TRUE)
+    cat("---\n\n", file = rmdfile, append = TRUE)
 
     messages %>%
       purrr::walk(
@@ -454,31 +459,31 @@ show.messages <- function(messages, type = c("console", "viewer"), is_browse = T
 
           if (role %in% "system") {
             cat("<p><span style='font-weight: bold; font-size:15px; color:#A94342'>![](", file_gear, "){#id .class width=4% height=4%} System</span></p>\n\n",
-                file = "answer.Rmd", append = TRUE)
+                file = rmdfile, append = TRUE)
             cat(glue::glue("<div class='alert alert-danger' role='alert'>{content}</div>\n\n"),
-                file = "answer.Rmd", append = TRUE)
+                file = rmdfile, append = TRUE)
           } else if (role %in% "user") {
             cat("<p><span style='font-weight: bold; font-size:15px; color:#31708F'>![](", file_user, "){#id .class width=4% height=4%} User</span></p>\n\n",
-                file = "answer.Rmd", append = TRUE)
+                file = rmdfile, append = TRUE)
             cat(glue::glue("<div class='alert alert-info' role='alert'>{content}</div>\n\n"),
-                file = "answer.Rmd", append = TRUE)
+                file = rmdfile, append = TRUE)
           } else if (role %in% "assistant") {
             cat("<p><div align='right' style='margin-top:25px; margin-bottom:20px; font-weight: bold; font-size:15px; color:#0BA37F;'>Assistant ![](", file_gpt, "){#id .class width=3.3% height=3.3%}</div></p>\n\n",
-                file = "answer.Rmd", append = TRUE)
+                file = rmdfile, append = TRUE)
             cat(glue::glue("<div class='alert alert-success' role='alert'>{content}</div>\n\n"),
-                file = "answer.Rmd", append = TRUE)
+                file = rmdfile, append = TRUE)
           }
         }
       )
 
-    rmarkdown::render("answer.Rmd")
+    rmarkdown::render(rmdfile)
     if (interactive()) {
       if (is_browse) {
-        utils::browseURL("answer.html")
+        utils::browseURL(paste(path, "answer.html", sep = "/"))
       }
     }
-    unlink("answer.Rmd")
-    unlink("answer.md")
+    unlink(rmdfile)
+    unlink(paste(path, "answer.md", sep = "/"))
   }
 }
 
