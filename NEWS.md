@@ -1,4 +1,27 @@
-# bitGPT 0.3.8.9000
+# bitGPT 0.4.0.9000
+
+## NEW FEATURES
+
+* update.messages() 메소드 추가. (#35). 
+    - messages 클래스 객체이서 이전 메시지 성분 수정
+    
+* 마지막 언어모델 사용 토큰 정보조회 함수 추가. (#36). 
+    - get_last_tokens()
+    
+## MAJOR CHANGES
+
+* 결과 반환에 사용 토큰 개수 정보를 인지하는 방법 제공. (#34). 
+  - chat_completion()
+  - create_completion()
+  - create_embeddings()
+ 
+## MINOR CHANGES
+
+* chat_completion() 모델 패러미터 초기값 설정 및 도움말 보강. (#32). 
+  
+    
+    
+# bitGPT 0.3.8.
 
 ## MINOR CHANGES
 

@@ -7,6 +7,8 @@
 #' 단일 요청에서 여러 입력에 대한 임베딩을 가져오려면, 각각 벡터의 원소로 입력함.
 #' 각 입력의 길이는 8192토큰을 초과하지 않아야 함.
 #' @param user character. 최종 사용자를 나타내는 고유 식별자로, OpenAI가 악용을 모니터링하고 감지하는 데 도움이 될 수 있음.
+#' @param verbose logical. 모델에서 사용한 prompt tokens과 totals tokens의 개수 출력 여부를 지정함.
+#' 기본값은 FLASE로 이 정보를 콘솔에 출력하지 않지만, TRUE이면 출력함.
 #' @param openai_api_key character. openai의 API key.
 #' @return {numeric matrix.} 개별 입력을 열로 갖는 수치 행렬.
 #' @references OpenAI의 API reference 중에서 [Completions > Create embeddings](https://platform.openai.com/docs/api-reference/embeddings/create)
@@ -37,11 +39,15 @@
 #'   lsa::cosine()
 #' }
 #' @export
+#' @import dplyr
 #' @importFrom assertthat assert_that is.string noNA
 #' @importFrom openai create_embedding
+#' @importFrom glue glue
+#' @importFrom cli cli_alert_info
 create_embeddings <- function(model,
                               input,
                               user = NULL,
+                              verbose = FALSE,
                               openai_api_key = Sys.getenv("OPENAI_API_KEY")) {
   #---------------------------------------------------------------------------
   # Validate arguments
@@ -64,6 +70,17 @@ create_embeddings <- function(model,
     user = user,
     openai_api_key = openai_api_key
   )
+
+  prompt_tokens <- response$usage$prompt_tokens
+  total_tokens <- response$usage$total_tokens
+
+  set_last_tokens(service = "create_embeddings", prompt_tokens = prompt_tokens,
+                  completion_tokens = 0, total_tokens = total_tokens)
+
+  if (verbose) {
+    glue::glue("prompt tokens: {prompt_tokens}, total tokens: {total_tokens}") %>%
+      cli::cli_alert_info()
+  }
 
   answer <- response$data$embedding %>%
     sapply(cbind)

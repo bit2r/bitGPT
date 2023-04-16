@@ -49,10 +49,10 @@ create_messages <- function(user = NULL, system = NULL) {
   }
 
   if (!is.null(system)) {
-    messages <- list(list(role = "system", content = system),
-                     list(role = "user", content = user))
+    messages <- list(list(role = "system", content = system, tokens = NULL),
+                     list(role = "user", content = user, tokens = NULL))
   } else {
-    messages <- list(list(role = "user", content = user))
+    messages <- list(list(role = "user", content = user, tokens = NULL))
   }
 
   class(messages) <- append("messages", class(messages))
@@ -66,6 +66,10 @@ create_messages <- function(user = NULL, system = NULL) {
 #' @param messages messages. chatGPT와 chat completion을 수행하기 위한 메시지 객체.
 #' @param assistant character. assistant role을 갖는 메시지.
 #' @param user character. user role을 갖는 메시지.
+#' @param assistant_tokens integer. assistant 메시지로 산정된 completion tokens.
+#' @param user_tokens integer. user 메시지로 산정된 prompt tokens.
+#' @details assistant_tokens과 user_tokens는 사용자가 정의하는 것이 아니라,
+#' API를 통한 호출과정에서 모델의 연산 결과로서의 토큰 사용량 정보를 반환하기 위한 용도입니다.
 #' @return messages object.
 #' @examples
 #' \dontrun{
@@ -85,7 +89,8 @@ create_messages <- function(user = NULL, system = NULL) {
 #' @method add messages
 #' @export
 #' @import dplyr
-add.messages <- function(messages, assistant = NULL, user = NULL, ...) {
+add.messages <- function(messages, assistant = NULL, user = NULL,
+                         assistant_tokens = NULL, user_tokens = NULL, ...) {
   if (!is.null(user)) {
     assertthat::assert_that(
       assertthat::is.string(user),
@@ -102,17 +107,142 @@ add.messages <- function(messages, assistant = NULL, user = NULL, ...) {
 
   if (!is.null(assistant)) {
     messages <- messages %>%
-      append(list(list(role = "assistant", content = assistant)))
+      append(list(list(role = "assistant", content = assistant, tokens = assistant_tokens)))
   }
 
   if (!is.null(user)) {
     messages <- messages %>%
-      append(list(list(role = "user", content = user)))
+      append(list(list(role = "user", content = user, tokens = user_tokens)))
   }
 
   class(messages) <- append("messages", class(messages))
 
   messages
+}
+
+
+#' @importFrom purrr map_chr
+last_index <- function(x, role = c("user", "assistant", "system")) {
+  role <- match.arg(role)
+
+  x %>%
+    purrr::map_chr(
+      function(x) {
+        x$role
+      }
+    ) %in% role %>%
+    which() %>%
+    max()
+}
+
+
+#' Update chat messages for chatGPT
+#' @description chatGPT의 chat completion messages에 메시지와 토큰을 수정
+#' @param messages messages. chatGPT와 chat completion을 수행하기 위한 메시지 객체.
+#' @param assistant character. assistant role을 갖는 메시지.
+#' @param user character. user role을 갖는 메시지.
+#' @param assistant_tokens integer. assistant 메시지로 산정된 completion tokens.
+#' @param user_tokens integer. user 메시지로 산정된 prompt tokens.
+#' @details API를 통한 호출과정에서 모델의 연산 결과로서의 토큰 사용량 정보를 업데이트하기 위한 용도입니다.
+#' @return messages object.
+#' @examples
+#' \dontrun{
+#' # 메시지 생성
+#' msg <- create_messages("Who won the world series in 2020?", "You are a helpful assistant.")
+#' msg
+#'
+#' # 메시지 추가
+#' library(dplyr)
+#'
+#' msg <- msg %>%
+#'   add(assistant = "The Los Angeles Dodgers won the World Series in 2020.",
+#'       user = "Where was it played?")
+#' msg
+#'
+#' update(msg, user_tokens = 125)
+#'
+#' }
+#' @method update messages
+#' @export
+#' @import dplyr
+#' @importFrom assertthat assert_that is.string is.number noNA
+update.messages <- function(messages, assistant = NULL, user = NULL,
+                            assistant_tokens = NULL, user_tokens = NULL, ...) {
+  if (!is.null(user)) {
+    assertthat::assert_that(
+      assertthat::is.string(user),
+      assertthat::noNA(user)
+    )
+  }
+
+  if (!is.null(user_tokens)) {
+    assertthat::assert_that(
+      assertthat::is.number(user_tokens),
+      assertthat::noNA(user_tokens)
+    )
+  }
+
+  if (!is.null(assistant)) {
+    assertthat::assert_that(
+      assertthat::is.string(assistant),
+      assertthat::noNA(assistant)
+    )
+  }
+
+  if (!is.null(assistant_tokens)) {
+    assertthat::assert_that(
+      assertthat::is.number(assistant_tokens),
+      assertthat::noNA(assistant_tokens)
+    )
+  }
+
+  if (!is.null(assistant)) {
+    idx <- messages %>%
+      last_index("assistant")
+
+    messages[[idx]]$content <- assistant
+  }
+
+  if (!is.null(assistant_tokens)) {
+    idx <- messages %>%
+      last_index("assistant")
+
+    messages[[idx]]$tokens <- assistant_tokens
+  }
+
+  if (!is.null(user)) {
+    idx <- messages %>%
+      last_index("user")
+
+    messages[[idx]]$content <- user
+  }
+
+  if (!is.null(user_tokens)) {
+    idx <- messages %>%
+      last_index("user")
+
+    messages[[idx]]$tokens <- user_tokens
+  }
+
+  messages
+}
+
+
+remove_tokens <- function(x) {
+  x <- x %>%
+    length() %>%
+    seq() %>%
+    purrr::map(
+      function(idx) {
+        x[[idx]]$tokens <- NULL
+
+        x[[idx]]
+      }
+    )
+
+  class(x) <- append("messages", class(x))
+
+  x
 }
 
 
@@ -123,24 +253,35 @@ add.messages <- function(messages, assistant = NULL, user = NULL, ...) {
 #' character vector의 경우에는 role이 user인 경우의 메시지를 기술해야함.
 #' @param model character. Chat completion에 사용할 OpenAI의 모델로,
 #' "gpt-3.5-turbo", "gpt-3.5-turbo-0301"에서 선택함. 기본값은 "gpt-3.5-turbo".
-#' @param temperature numeric. 0에서 2 사이에서 사용할 샘플링 온도.
-#' 0.8과 같이 값이 높으면 출력이 더 무작위적이고,
-#' 0.2와 같이 값이 낮으면 더 집중적이고 결정론적인 출력이 됨.
-#' 일반적으로 이 값 또는 top_p를 변경하는 것이 좋지만 둘 다 변경하는 것은 권장하지 않음.
+#' @param temperature numeric. 0~2 사이에서 사용할 샘플링 온도.
+#' 0.2와 같이 값이 낮으면 더 집중적이고 결정론적인 출력이 됨. (낮을수록 더 정확한 텍스트를 생성하지만, 다소 반복적일 수 있음)
+#' 0.8과 같이 값이 높으면 출력이 더 무작위적임(더 다양한 결과를 생성하지만, 불안정할 수 있음).
+#' 일반적으로는 0.5~1.0 사이의 값을 사용하며, 이 함수에서는 0.7을 기본값으로 사용함.
+#' 이 값 또는 top_p를 변경하는 것이 좋지만 둘 다 변경하는 것은 권장하지 않음.
+#' 둘 중 하나를 사용할 때는 다른 하나를 1로 설정해야 함.
 #' @param top_p numeric. 온도를 이용한 샘플링의 대안으로, 핵 샘플링이라고 하며,
 #' 모델이 상위_p 확률 질량을 가진 토큰의 결과를 고려.
 #' 따라서 0.1은 상위 10% 확률 질량을 구성하는 토큰만 고려한다는 의미.
 #' 일반적으로 이 값이나 temperature를 변경하는 것을 권장하지만 둘 다 변경하는 것은 권장하지 않음.
-#' @param n integer. 각 입력 메시지에 대해 생성할 채팅 완료 선택 항목의 수로 기본값은 1.
-#' @param stream logical. 이 옵션을 설정하면 ChatGPT에서와 같이 부분 메시지가 전송됨.
-#' 토큰은 사용 가능해지면 data-only server-sent 이벤트로 전송되며, 스트림은 data의 [DONE] 메시지로 스트림이 종료됨.
+#' 둘 중 하나를 사용할 때는 다른 하나를 1로 설정해야 함.
+#' @param n integer. 입력 메시지에 대해 생성할 채팅 완료 텍스트의 개수로 기본값은 1.
+#' @param stream logical. 이 옵션을 TRUE로 설정하면 ChatGPT에서와 같이 부분 메시지가 전송됨.
+#' 그러나, 현재 이 기능은 지원하지 않음. 그러므로 결과가 한번에 단일 문자열로 반환되며,
+#' ChatGPT 웹 페이지처럼 스트리밍된 결과가 순차적으로 타이핑되는 것을 구현할 수 없음.
+#' 그러므로 기본값인 FALSE를 사용해야 함.
 #' @param stop character. API가 추가 토큰 생성을 중지하는 시퀀스는 1부터 최대 4개까지임.
-#' @param max_tokens integer. 생성된 답변에 허용되는 토큰의 최대 개수.
-#' 기본적으로 모델이 반환할 수 있는 토큰 수는 (4096 - 프롬프트 토큰).
+#' @param max_tokens integer. 생성된 답변에 허용되는 '답변 토큰'의 최대 개수.
+#' 기본적으로 모델이 반환할 수 있는 토큰 수는 gpt-3.5 모델의 경우에는 (4096 - 프롬프트 토큰).
+#' 토큰은 질문을 위한 프롬프트에서 생성된 '프롬프트 토큰'과 '답변 토큰'의 2가지가 있음.
+#' 모델별로 최대 토큰이 설정되어 있는데, 두 토큰의 합이 최대 토큰을 넘을 수 없음.
 #' @param presence_penalty numeric. -2.0에서 2.0 사이의 숫자.
-#' 양수 값은 지금까지 텍스트에 등장한 토큰에 따라 새로운 토큰에 불이익을 주므로 모델이 새로운 주제에 대해 이야기할 가능성이 높아짐.
+#' 단어가 얼마나 자주 사용되었는지를 고려하지 않고 단어가 텍스트에 존재하는 경우에만 고려하는 방법으로,
+#' 생성할 텍스트가 이미 생성된 텍스트와 유사한지 여부를 제어하는 데 사용.
+#' 양수 값은 지금까지 텍스트에 등장한 토큰에 따라 새로운 토큰에 불이익을 주므로,
+#' 모델이 새로운 주제에 대해 이야기할 가능성이 높아짐. 즉, 값이 높을수록 생성된 텍스트가 이미 생성된 텍스트와 다르게 생성됨.
 #' @param frequency_penalty numeric. -2.0에서 2.0 사이의 숫자.
-#' 양수 값은 지금까지 텍스트에서 기존 빈도에 따라 새 토큰에 불이익을 주어 모델이 같은 줄을 그대로 반복할 가능성을 낮춤.
+#' 생성할 텍스트에서 이미 사용된 단어가 많을수록 단어가 다시 선택될 가능성을 낮추는 방식으로 작동함.
+#' 양수 값은 지금까지 텍스트에서 기존 빈도에 따라 새 토큰에 불이익을 주어, 모델이 같은 줄을 그대로 반복할 가능성을 낮춤.
 #' @param logit_bias 완료에 지정된 토큰이 표시될 가능성을 수정.
 #' 토큰(토큰화기에서 토큰 ID로 지정)을 -100에서 100 사이의 연관된 바이어스 값에 매핑하는 json 객체를 받음.
 #' 수학적으로 바이어스는 샘플링 전에 모델에서 생성된 로그에 추가됨.
@@ -151,12 +292,14 @@ add.messages <- function(messages, assistant = NULL, user = NULL, ...) {
 #' "messages"는 결과를 assistant 컴포넌트에 추가한 messages 객체를 반환함.
 #' "console"는 R 콘솔에 프린트 아웃되며, "viewer"는 HTML 포맷으로 브라우저에 출력됨.
 #' 만약 결과에 R 코드가 chunk로 포함되어 있다면, 코드가 실행된 결과도 HTML 문서에 포함됨.
+#' @param verbose logical. 모델에서 사용한 prompt tokens과 completion tokens의 개수 출력 여부를 지정함.
+#' 기본값은 FLASE로 이 정보를 콘솔에 출력하지 않지만, TRUE이면 출력함.
+#' @param openai_api_key character. openai의 API key.
 #' @details type 인수가 "viewer"일 경우에 질의 결과에 R 코드가 포함되어 있다고 모두 수행되는 것은 아님.
 #' R 코드가 chunk로 포함되어 있을 경우에만, 해당 chunk의 R 코드가 실행되며,
 #' 어쩌면 불완전한 코드로 인해서 에러가 발생할 수도 있음.
 #' 메시지에 이전의 메시지를 추가하여 chat completion을 수행하면,
 #' 이전 메시지를 고려하여 결과를 반환함.
-#' @param openai_api_key character. openai의 API key.
 #' @return messages 객체.
 #' @examples
 #' \dontrun{
@@ -188,6 +331,7 @@ add.messages <- function(messages, assistant = NULL, user = NULL, ...) {
 #'
 #' }
 #' @export
+#' @import dplyr
 #' @importFrom httr upload_file POST add_headers content http_error status_code
 #' @importFrom assertthat assert_that is.string noNA is.readable
 #' @importFrom glue glue
@@ -195,9 +339,10 @@ add.messages <- function(messages, assistant = NULL, user = NULL, ...) {
 #' @importFrom rmarkdown render
 #' @importFrom utils browseURL
 #' @importFrom stringr str_replace_all
+#' @importFrom cli cli_alert_info
 chat_completion <- function(messages = NULL,
                             model = c("gpt-3.5-turbo", "gpt-3.5-turbo-0301"),
-                            temperature = 1,
+                            temperature = 0.7,
                             top_p = 1,
                             n = 1,
                             stream = FALSE,
@@ -208,6 +353,7 @@ chat_completion <- function(messages = NULL,
                             logit_bias = NULL,
                             user = NULL,
                             type = c("messages", "console", "viewer"),
+                            verbose = FALSE,
                             openai_api_key = Sys.getenv("OPENAI_API_KEY")) {
   #-----------------------------------------------------------------------------
   model <- match.arg(model)
@@ -322,7 +468,7 @@ chat_completion <- function(messages = NULL,
 
   body <- list()
   body[["model"]] <- model
-  body[["messages"]] <- messages_list
+  body[["messages"]] <- remove_tokens(messages_list)
   body[["temperature"]] <- temperature
   body[["top_p"]] <- top_p
   body[["n"]] <- n
@@ -364,7 +510,23 @@ chat_completion <- function(messages = NULL,
   }
 
   answer <- parsed$choices$message.content
-  messages_list <- add(messages_list, assistant = answer)
+  completion_tokens <- parsed$usage$completion_tokens
+
+  messages_list <- add(messages_list, assistant = answer,
+                       assistant_tokens = completion_tokens)
+
+  ## Append prompt tokens
+  prompt_tokens <- parsed$usage$prompt_tokens
+  messages_list <- update(messages_list, user_tokens = prompt_tokens)
+
+  set_last_tokens(service = "chat_completion", prompt_tokens = prompt_tokens,
+                  completion_tokens = completion_tokens,
+                  total_tokens =  + completion_tokens)
+
+  if (verbose) {
+    glue::glue("prompt tokens: {prompt_tokens}, completion tokens: {completion_tokens}, total tokens: {prompt_tokens + completion_tokens}") %>%
+      cli::cli_alert_info()
+  }
 
   if (type %in% "messages") {
     return(messages_list)

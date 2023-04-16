@@ -8,8 +8,8 @@ create_completion(
   model,
   prompt = "<|endoftext|>",
   suffix = NULL,
-  max_tokens = 16L,
-  temperature = 1,
+  max_tokens = 256L,
+  temperature = 0.7,
   top_p = 1,
   n = 1L,
   stream = FALSE,
@@ -23,6 +23,7 @@ create_completion(
   user = NULL,
   ko2en = TRUE,
   type = c("text", "console"),
+  verbose = FALSE,
   openai_api_key = Sys.getenv("OPENAI_API_KEY")
 )
 }
@@ -88,6 +89,9 @@ TRUE이면 한글 프롬프트를 영어로 번역하여 프롬프트를 질의�
 
 \item{type}{character. 반환하는 결과 타입. "text", "console", 에서 선택하며,
 기본값인 "text"는 텍스트를, "console"는 R 콘솔에 프린트 아웃됨.}
+
+\item{verbose}{logical. 모델에서 사용한 prompt tokens과 completion tokens의 개수 출력 여부를 지정함.
+기본값은 FLASE로 이 정보를 콘솔에 출력하지 않지만, TRUE이면 출력함.}
 
 \item{openai_api_key}{character. openai의 API key.}
 }

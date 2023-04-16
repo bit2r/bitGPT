@@ -45,6 +45,8 @@
 #' TRUE이면 한글 프롬프트를 영어로 번역하여 프롬프트를 질의하고, 영어 질의 결과를 한국어로 번역해서 반환함.
 #' @param type character. 반환하는 결과 타입. "text", "console", 에서 선택하며,
 #' 기본값인 "text"는 텍스트를, "console"는 R 콘솔에 프린트 아웃됨.
+#' @param verbose logical. 모델에서 사용한 prompt tokens과 completion tokens의 개수 출력 여부를 지정함.
+#' 기본값은 FLASE로 이 정보를 콘솔에 출력하지 않지만, TRUE이면 출력함.
 #' @param openai_api_key character. openai의 API key.
 #' @details best_of 인수는 많은 완료를 생성하므로 토큰 할당량을 빠르게 소모할 수 있습니다.
 #' 최대_토큰과 중지에 대한 합리적인 설정이 있는지 확인하고 신중하게 사용하세요.
@@ -83,16 +85,18 @@
 #' )
 #' }
 #' @export
+#' @import dplyr
 #' @importFrom assertthat assert_that is.string noNA is.readable
 #' @importFrom glue glue
 #' @importFrom openai create_completion
 #' @importFrom stringr str_remove_all
 #' @importFrom purrr map_chr walk
+#' @importFrom cli cli_alert_info
 create_completion <- function(model,
                               prompt = "<|endoftext|>",
                               suffix = NULL,
-                              max_tokens = 16L,
-                              temperature = 1,
+                              max_tokens = 256L,
+                              temperature = 0.7,
                               top_p = 1,
                               n = 1L,
                               stream = FALSE,
@@ -106,6 +110,7 @@ create_completion <- function(model,
                               user = NULL,
                               ko2en = TRUE,
                               type = c("text", "console"),
+                              verbose = FALSE,
                               openai_api_key = Sys.getenv("OPENAI_API_KEY")) {
 
   type <- match.arg(type)
@@ -248,6 +253,17 @@ create_completion <- function(model,
   )
 
   answer <- response$choices$text
+  completion_tokens <- response$usage$completion_tokens
+  prompt_tokens <- response$usage$prompt_tokens
+
+  set_last_tokens(service = "create_completion", prompt_tokens = prompt_tokens,
+                  completion_tokens = completion_tokens,
+                  total_tokens =  + completion_tokens)
+
+  if (verbose) {
+    glue::glue("prompt tokens: {prompt_tokens}, completion tokens: {completion_tokens}, total tokens: {prompt_tokens + completion_tokens}") %>%
+      cli::cli_alert_info()
+  }
 
   if (ko2en) {
     answer <- answer %>%
