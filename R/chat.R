@@ -604,9 +604,12 @@ show.messages <- function(messages, type = c("console", "viewer"), is_browse = T
     rmdfile <- paste(path, "answer.Rmd", sep = "/")
 
     cat("---\n", file = rmdfile)
-    cat("title: Chat with chatGPT\n", file = rmdfile, append = TRUE)
     cat("output: html_document\n", file = rmdfile, append = TRUE)
-    cat("---\n\n", file = rmdfile, append = TRUE)
+    cat("---\n\n\n", file = rmdfile, append = TRUE)
+
+    cat("```{r, echo=FALSE}\n", file = rmdfile, append = TRUE)
+    cat("htmltools::p(' ')\n", file = rmdfile, append = TRUE)
+    cat("```\n\n", file = rmdfile, append = TRUE)
 
     messages %>%
       purrr::walk(

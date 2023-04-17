@@ -18,7 +18,9 @@
 ## MINOR CHANGES
 
 * chat_completion() 모델 패러미터 초기값 설정 및 도움말 보강. (#32). 
-  
+
+* show.messages() 출력 시 HTML 타이틀 제거. (#37).  
+
     
     
 # bitGPT 0.3.8.
