@@ -6,7 +6,7 @@
 \usage{
 chat_completion(
   messages = NULL,
-  model = c("gpt-3.5-turbo", "gpt-3.5-turbo-0301"),
+  model = NULL,
   temperature = 0.7,
   top_p = 1,
   n = 1,
@@ -28,7 +28,9 @@ chat_completion(
 character vector의 경우에는 role이 user인 경우의 메시지를 기술해야함.}
 
 \item{model}{character. Chat completion에 사용할 OpenAI의 모델로,
-"gpt-3.5-turbo", "gpt-3.5-turbo-0301"에서 선택함. 기본값은 "gpt-3.5-turbo".}
+"gpt-4", "gpt-4-0613", "gpt-4-32k", "gpt-4-32k-0613", "gpt-3.5-turbo",
+"gpt-3.5-turbo-0613", "gpt-3.5-turbo-16k", "gpt-3.5-turbo-16k-0613"에서 선택함.
+기본값은 "gpt-3.5-turbo".}
 
 \item{temperature}{numeric. 0~2 사이에서 사용할 샘플링 온도.
 0.2와 같이 값이 낮으면 더 집중적이고 결정론적인 출력이 됨. (낮을수록 더 정확한 텍스트를 생성하지만, 다소 반복적일 수 있음)
@@ -105,6 +107,9 @@ messages <- "mtcars 데이터를 ggplot2 패키지로 wt 변수와 mpg 변수를
 
 # 메시지 객체로 반환
 chat_completion(messages)
+
+# GPT-4 모델 호출
+chat_completion(messages, model = "gpt-4")
 
 # R 콘솔에 프린트 아웃
 chat_completion(messages, type = "console")

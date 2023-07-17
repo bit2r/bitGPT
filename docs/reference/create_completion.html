@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bitGPT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.1.9000</span>
       </span>
     </div>
 
@@ -57,8 +57,8 @@
 <span>  <span class="va">model</span>,</span>
 <span>  prompt <span class="op">=</span> <span class="st">"&lt;|endoftext|&gt;"</span>,</span>
 <span>  suffix <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  max_tokens <span class="op">=</span> <span class="fl">16L</span>,</span>
-<span>  temperature <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  max_tokens <span class="op">=</span> <span class="fl">256L</span>,</span>
+<span>  temperature <span class="op">=</span> <span class="fl">0.7</span>,</span>
 <span>  top_p <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>  stream <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -72,6 +72,7 @@
 <span>  user <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ko2en <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"text"</span>, <span class="st">"console"</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  openai_api_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"OPENAI_API_KEY"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -176,6 +177,11 @@ TRUE이면 한글 프롬프트를 영어로 번역하여 프롬프트를 질의�
 기본값인 "text"는 텍스트를, "console"는 R 콘솔에 프린트 아웃됨.</p></dd>
 
 
+<dt>verbose</dt>
+<dd><p>logical. 모델에서 사용한 prompt tokens과 completion tokens의 개수 출력 여부를 지정함.
+기본값은 FLASE로 이 정보를 콘솔에 출력하지 않지만, TRUE이면 출력함.</p></dd>
+
+
 <dt>openai_api_key</dt>
 <dd><p>character. openai의 API key.</p></dd>
 
@@ -238,7 +244,7 @@ TRUE이면 한글 프롬프트를 영어로 번역하여 프롬프트를 질의�
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

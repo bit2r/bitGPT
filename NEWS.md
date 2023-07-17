@@ -1,4 +1,15 @@
-# bitGPT 0.4.0.9000
+# bitGPT 0.4.1.9000
+
+## NEW FEATURES
+
+* GPT-4 모델의 지원. (thanks to @statkclee, #38, #39). 
+    - chat_completion()
+    - 지원 GPT-4 모델
+        - gpt-4, gpt-4-0613, gpt-4-32k, gpt-4-32k-0613
+    
+    
+    
+# bitGPT 0.4.0
 
 ## NEW FEATURES
 

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bitGPT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.7.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.1.9000</span>
       </span>
     </div>
 
@@ -54,7 +54,13 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for messages</span></span>
-<span><span class="fu">show</span><span class="op">(</span><span class="va">messages</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"console"</span>, <span class="st">"viewer"</span><span class="op">)</span>, is_browse <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">show</span><span class="op">(</span></span>
+<span>  <span class="va">messages</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"console"</span>, <span class="st">"viewer"</span><span class="op">)</span>,</span>
+<span>  is_browse <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -72,6 +78,11 @@
 <dt>is_browse</dt>
 <dd><p>logical. type 인수가 TRUE일 경우에, is_browse가 TRUE이면
 브라우저에 결과가 브라우징되고, FALSE이면 브라우징되지 않음.</p></dd>
+
+
+<dt>path</dt>
+<dd><p>character. 브라우징을 위한 HTML 파일을 생성할 Rmd 파일 생성 경로. 기본값은
+R 세션의 TEMP 디렉토리인 tempdir().</p></dd>
 
 </dl></div>
 
@@ -107,7 +118,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bitGPT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.5.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.1.9000</span>
       </span>
     </div>
 
@@ -55,8 +55,8 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">chat_completion</span><span class="op">(</span></span>
 <span>  messages <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gpt-3.5-turbo"</span>, <span class="st">"gpt-3.5-turbo-0301"</span><span class="op">)</span>,</span>
-<span>  temperature <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  model <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  temperature <span class="op">=</span> <span class="fl">0.7</span>,</span>
 <span>  top_p <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  stream <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -67,6 +67,7 @@
 <span>  logit_bias <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  user <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"messages"</span>, <span class="st">"console"</span>, <span class="st">"viewer"</span><span class="op">)</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  openai_api_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"OPENAI_API_KEY"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -81,30 +82,37 @@ character vector의 경우에는 role이 user인 경우의 메시지를 기술�
 
 <dt>model</dt>
 <dd><p>character. Chat completion에 사용할 OpenAI의 모델로,
-"gpt-3.5-turbo", "gpt-3.5-turbo-0301"에서 선택함. 기본값은 "gpt-3.5-turbo".</p></dd>
+"gpt-4", "gpt-4-0613", "gpt-4-32k", "gpt-4-32k-0613", "gpt-3.5-turbo",
+"gpt-3.5-turbo-0613", "gpt-3.5-turbo-16k", "gpt-3.5-turbo-16k-0613"에서 선택함.
+기본값은 "gpt-3.5-turbo".</p></dd>
 
 
 <dt>temperature</dt>
-<dd><p>numeric. 0에서 2 사이에서 사용할 샘플링 온도.
-0.8과 같이 값이 높으면 출력이 더 무작위적이고,
-0.2와 같이 값이 낮으면 더 집중적이고 결정론적인 출력이 됨.
-일반적으로 이 값 또는 top_p를 변경하는 것이 좋지만 둘 다 변경하는 것은 권장하지 않음.</p></dd>
+<dd><p>numeric. 0~2 사이에서 사용할 샘플링 온도.
+0.2와 같이 값이 낮으면 더 집중적이고 결정론적인 출력이 됨. (낮을수록 더 정확한 텍스트를 생성하지만, 다소 반복적일 수 있음)
+0.8과 같이 값이 높으면 출력이 더 무작위적임(더 다양한 결과를 생성하지만, 불안정할 수 있음).
+일반적으로는 0.5~1.0 사이의 값을 사용하며, 이 함수에서는 0.7을 기본값으로 사용함.
+이 값 또는 top_p를 변경하는 것이 좋지만 둘 다 변경하는 것은 권장하지 않음.
+둘 중 하나를 사용할 때는 다른 하나를 1로 설정해야 함.</p></dd>
 
 
 <dt>top_p</dt>
 <dd><p>numeric. 온도를 이용한 샘플링의 대안으로, 핵 샘플링이라고 하며,
 모델이 상위_p 확률 질량을 가진 토큰의 결과를 고려.
 따라서 0.1은 상위 10% 확률 질량을 구성하는 토큰만 고려한다는 의미.
-일반적으로 이 값이나 temperature를 변경하는 것을 권장하지만 둘 다 변경하는 것은 권장하지 않음.</p></dd>
+일반적으로 이 값이나 temperature를 변경하는 것을 권장하지만 둘 다 변경하는 것은 권장하지 않음.
+둘 중 하나를 사용할 때는 다른 하나를 1로 설정해야 함.</p></dd>
 
 
 <dt>n</dt>
-<dd><p>integer. 각 입력 메시지에 대해 생성할 채팅 완료 선택 항목의 수로 기본값은 1.</p></dd>
+<dd><p>integer. 입력 메시지에 대해 생성할 채팅 완료 텍스트의 개수로 기본값은 1.</p></dd>
 
 
 <dt>stream</dt>
-<dd><p>logical. 이 옵션을 설정하면 ChatGPT에서와 같이 부분 메시지가 전송됨.
-토큰은 사용 가능해지면 data-only server-sent 이벤트로 전송되며, 스트림은 data의 DONE 메시지로 스트림이 종료됨.</p></dd>
+<dd><p>logical. 이 옵션을 TRUE로 설정하면 ChatGPT에서와 같이 부분 메시지가 전송됨.
+그러나, 현재 이 기능은 지원하지 않음. 그러므로 결과가 한번에 단일 문자열로 반환되며,
+ChatGPT 웹 페이지처럼 스트리밍된 결과가 순차적으로 타이핑되는 것을 구현할 수 없음.
+그러므로 기본값인 FALSE를 사용해야 함.</p></dd>
 
 
 <dt>stop</dt>
@@ -112,18 +120,24 @@ character vector의 경우에는 role이 user인 경우의 메시지를 기술�
 
 
 <dt>max_tokens</dt>
-<dd><p>integer. 생성된 답변에 허용되는 토큰의 최대 개수.
-기본적으로 모델이 반환할 수 있는 토큰 수는 (4096 - 프롬프트 토큰).</p></dd>
+<dd><p>integer. 생성된 답변에 허용되는 '답변 토큰'의 최대 개수.
+기본적으로 모델이 반환할 수 있는 토큰 수는 gpt-3.5 모델의 경우에는 (4096 - 프롬프트 토큰).
+토큰은 질문을 위한 프롬프트에서 생성된 '프롬프트 토큰'과 '답변 토큰'의 2가지가 있음.
+모델별로 최대 토큰이 설정되어 있는데, 두 토큰의 합이 최대 토큰을 넘을 수 없음.</p></dd>
 
 
 <dt>presence_penalty</dt>
 <dd><p>numeric. -2.0에서 2.0 사이의 숫자.
-양수 값은 지금까지 텍스트에 등장한 토큰에 따라 새로운 토큰에 불이익을 주므로 모델이 새로운 주제에 대해 이야기할 가능성이 높아짐.</p></dd>
+단어가 얼마나 자주 사용되었는지를 고려하지 않고 단어가 텍스트에 존재하는 경우에만 고려하는 방법으로,
+생성할 텍스트가 이미 생성된 텍스트와 유사한지 여부를 제어하는 데 사용.
+양수 값은 지금까지 텍스트에 등장한 토큰에 따라 새로운 토큰에 불이익을 주므로,
+모델이 새로운 주제에 대해 이야기할 가능성이 높아짐. 즉, 값이 높을수록 생성된 텍스트가 이미 생성된 텍스트와 다르게 생성됨.</p></dd>
 
 
 <dt>frequency_penalty</dt>
 <dd><p>numeric. -2.0에서 2.0 사이의 숫자.
-양수 값은 지금까지 텍스트에서 기존 빈도에 따라 새 토큰에 불이익을 주어 모델이 같은 줄을 그대로 반복할 가능성을 낮춤.</p></dd>
+생성할 텍스트에서 이미 사용된 단어가 많을수록 단어가 다시 선택될 가능성을 낮추는 방식으로 작동함.
+양수 값은 지금까지 텍스트에서 기존 빈도에 따라 새 토큰에 불이익을 주어, 모델이 같은 줄을 그대로 반복할 가능성을 낮춤.</p></dd>
 
 
 <dt>logit_bias</dt>
@@ -143,6 +157,11 @@ character vector의 경우에는 role이 user인 경우의 메시지를 기술�
 "messages"는 결과를 assistant 컴포넌트에 추가한 messages 객체를 반환함.
 "console"는 R 콘솔에 프린트 아웃되며, "viewer"는 HTML 포맷으로 브라우저에 출력됨.
 만약 결과에 R 코드가 chunk로 포함되어 있다면, 코드가 실행된 결과도 HTML 문서에 포함됨.</p></dd>
+
+
+<dt>verbose</dt>
+<dd><p>logical. 모델에서 사용한 prompt tokens과 completion tokens의 개수 출력 여부를 지정함.
+기본값은 FLASE로 이 정보를 콘솔에 출력하지 않지만, TRUE이면 출력함.</p></dd>
 
 
 <dt>openai_api_key</dt>
@@ -172,6 +191,9 @@ R 코드가 chunk로 포함되어 있을 경우에만, 해당 chunk의 R 코드�
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 메시지 객체로 반환</span></span></span>
 <span class="r-in"><span><span class="fu">chat_completion</span><span class="op">(</span><span class="va">messages</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># GPT-4 모델 호출</span></span></span>
+<span class="r-in"><span><span class="fu">chat_completion</span><span class="op">(</span><span class="va">messages</span>, model <span class="op">=</span> <span class="st">"gpt-4"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># R 콘솔에 프린트 아웃</span></span></span>
 <span class="r-in"><span><span class="fu">chat_completion</span><span class="op">(</span><span class="va">messages</span>, type <span class="op">=</span> <span class="st">"console"</span><span class="op">)</span></span></span>
@@ -208,7 +230,7 @@ R 코드가 chunk로 포함되어 있을 경우에만, 해당 chunk의 R 코드�
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
