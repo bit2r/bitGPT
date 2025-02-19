@@ -2,10 +2,11 @@
 #' @description chatGPT를 이용해서 프롬프트에 부합하는 이미지를 생성함.
 #' @param prompt character. 이미지 생성 명령을 수행할 프롬프트.
 #' @param ko2en logical. 프롬프트가 한국어일 때, 영어로 번역하여 질의하는 여부 설정.
-#' TRUE이면 한글 프롬프트를 영어로 번역하여 프롬프트를 질의.
+#' model이 "dall-e-2"일 경우에만 사용하며, TRUE이면 한글 프롬프트를 영어로 번역하여 프롬프트를 질의.
 #' @param n integer. 생성할 이미지의 개수. 기본값은 1이며, 1과 10 사이의 정수를 사용함.
 #' @param size character. 이미지의 크기로 "1024x1024", "256x256", "512x512"에서
 #' 하나를 선택함. 기본값은 "1024x1024".
+#' @param model character. 사용할 모델로 dall-e-3", "dall-e-2"에서 선택함.
 #' @param type character. 반환하는 이미지 타입. "url", "image", "file"에서 선택하며,
 #' 기본값인 "url"은 이미지를 포함하는 URL을, "image"는 R환경에서 플롯으로 반환하고,
 #' "image"는 이미지 파일을 생성합니다.
@@ -22,30 +23,34 @@
 #' @examples
 #' \dontrun{
 #' # 영어 프롬프트
-#' prompt_en <- "Draw a sunrise and a seagull in Vincent van Gogh style."
+#' prompt_en <- "Vincent van Gogh-style painting of a fishing boat and beach scene at sunrise."
+#' # 한글 프롬프트
+#' prompt_ko <- "일출을 배경으로 낚시하는 어선과 해변의 풍경의 빈센트 반 고흐 화풍으로 그려줘"
 #'
 #' #' # 생성된 파일의 경로로서의 URL 반환
-#' draw_img(prompt_en, ko2en = FALSE)
-#'
-#' # 한글 프롬프트
-#' prompt_ko <- "빈센트 반 고흐 스타일로 일출과 갈매기를 그려줘"
+#' draw_img(prompt_ko)
 #'
 #' # 이미지를 반환
 #' draw_img(prompt_ko, type = "image")
 #'
 #' # 파일로 출력
 #' draw_img(prompt_ko, type = "file")
+#'
+#' # 파일로 출력
+#' draw_img(prompt_ko, ko2en = TRUE, model = "dall-e-2", type = "file")
 #' }
 #' @export
 #' @importFrom openai create_image
 #' @importFrom magick image_read image_write
-draw_img <- function(prompt, ko2en = TRUE, n = 1L,
-                     size = c("1024x1024", "256x256", "512x512"),
+draw_img <- function(prompt, ko2en = FALSE, n = 1L,
+                     model = c("dall-e-3", "dall-e-2"),
+                     size = c("1024x1024", "1792x1024", "1024x1792", "512x512", "256x256"),
                      type = c("url", "image", "file"),
                      format = c("png", "jpeg", "gif"),
                      path = "./", fname = "aidrawing",
                      openai_api_key = Sys.getenv("OPENAI_API_KEY")) {
   size <- match.arg(size)
+  model <- match.arg(model)
   type <- match.arg(type)
   format <- match.arg(format)
 
@@ -58,11 +63,11 @@ draw_img <- function(prompt, ko2en = TRUE, n = 1L,
     stop("생성할 이미지 개수를 지정하는 인수 n의 값은 1~10의 값만 허용합니다.")
   }
 
-  if (ko2en) {
+  if (ko2en & model %in% "dall-e-3") {
     prompt <- translate(prompt)
   }
 
-  response <- openai::create_image(
+  response <- create_image(
     prompt,
     n = n,
     size = size,
@@ -95,6 +100,58 @@ draw_img <- function(prompt, ko2en = TRUE, n = 1L,
       )
 
   }
+}
+
+
+create_image <- function (prompt, model = c("dall-e-3", "dall-e-2"), n = 1,
+                          size = c("1024x1024", "1792x1024", "1024x1792", "512x512", "256x256"),
+                          response_format = c("url", "b64_json"), user = NULL,
+                          openai_api_key = Sys.getenv("OPENAI_API_KEY"),
+                          openai_organization = NULL)
+{
+  size <- match.arg(size)
+  model <- match.arg(model)
+  response_format <- match.arg(response_format)
+
+  assertthat::assert_that(assertthat::is.string(prompt), assertthat::noNA(prompt))
+  assertthat::assert_that(assertthat::is.count(n))
+  assertthat::assert_that(assertthat::is.string(size), assertthat::noNA(size))
+  assertthat::assert_that(assertthat::is.string(response_format),
+                          assertthat::noNA(response_format))
+  if (!is.null(user)) {
+    assertthat::assert_that(assertthat::is.string(user),
+                            assertthat::noNA(user))
+  }
+  assertthat::assert_that(assertthat::is.string(openai_api_key),
+                          assertthat::noNA(openai_api_key))
+  if (!is.null(openai_organization)) {
+    assertthat::assert_that(assertthat::is.string(openai_organization),
+                            assertthat::noNA(openai_organization))
+  }
+  task <- "images/generations"
+  base_url <- glue::glue("https://api.openai.com/v1/{task}")
+  headers <- c(Authorization = paste("Bearer", openai_api_key),
+               `Content-Type` = "application/json")
+  if (!is.null(openai_organization)) {
+    headers["OpenAI-Organization"] <- openai_organization
+  }
+  body <- list()
+  body[["prompt"]] <- prompt
+  body[["n"]] <- n
+  body[["model"]] <- model
+  body[["size"]] <- size
+  body[["response_format"]] <- response_format
+  body[["user"]] <- user
+  response <- httr::POST(url = base_url, httr::add_headers(.headers = headers),
+                         body = body, encode = "json")
+  verify_mime_type(response)
+  parsed <- response %>% httr::content(as = "text", encoding = "UTF-8") %>%
+    jsonlite::fromJSON(flatten = TRUE)
+  if (httr::http_error(response)) {
+    paste0("OpenAI API request failed [", httr::status_code(response),
+           "]:\n\n", parsed$error$message) %>% stop(call. = FALSE)
+  }
+  parsed
 }
 
 

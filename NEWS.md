@@ -1,4 +1,15 @@
-# bitGPT 0.4.1.9000
+# bitGPT 0.4.2.9000
+
+## NEW FEATURES
+
+* 파파고 API 제거 및 DeepL API 기능 추가. (#40, #43, #45). 
+    - translate()
+* 이미지 생성에 dall-e-3 모델 추가. (#46). 
+    - draw_img()        
+        
+
+        
+# bitGPT 0.4.1
 
 ## NEW FEATURES
 

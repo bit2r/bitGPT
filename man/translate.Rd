@@ -2,32 +2,29 @@
 % Please edit documentation in R/translate.R
 \name{translate}
 \alias{translate}
-\title{Naver 파파고 번역기}
+\title{DeepL 번역기}
 \usage{
 translate(
   text = NULL,
-  source = "ko",
-  target = "en",
-  client_id = Sys.getenv("NAVER_CLIENT_ID"),
-  client_secret = Sys.getenv("NAVER_CLIENT_SECRET")
+  target = "EN",
+  source = "KO",
+  deepl_api_key = Sys.getenv("DEEPL_API_KEY")
 )
 }
 \arguments{
 \item{text}{character. 번역할 텍스트.}
 
-\item{source}{character. 번역할 텍스트 언어의 언어 코드. 기본값은 "ko"로 한국어를 번역함.}
+\item{target}{character. 번역될 언어의 언어 코드. 기본값은 "EN"로 영어로 번역함.}
 
-\item{target}{character. 번역될 언어의 언어 코드. 기본값은 "en"로 영어로 번역함.}
+\item{source}{character. 번역할 텍스트 언어의 언어 코드. 기본값은 "KO"로 한국어를 번역함.}
 
-\item{client_id}{character. Naver 파파고 API key의 client ID.}
-
-\item{client_secret}{character. Naver 파파고 API key의 client Secret.}
+\item{deepl_api_key}{character. DeepL API key.}
 }
 \description{
-Naver 파파고 번역 API를 이용해서 텍스트의 번역을 수행합니다.
+DeepL 번역 API를 이용해서 텍스트의 번역을 수행합니다.
 }
 \details{
-지원되는 언어와 언어 코드는 https://developers.naver.com/docs/papago/papago-nmt-api-reference.md를 참고하세요.
+지원되는 언어와 언어 코드는 https://developers.deepl.com/docs/api-reference/translate/openapi-spec-for-text-translation를 참고하세요.
 }
 \examples{
 \dontrun{

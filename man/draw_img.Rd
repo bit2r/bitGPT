@@ -6,9 +6,10 @@
 \usage{
 draw_img(
   prompt,
-  ko2en = TRUE,
+  ko2en = FALSE,
   n = 1L,
-  size = c("1024x1024", "256x256", "512x512"),
+  model = c("dall-e-3", "dall-e-2"),
+  size = c("1024x1024", "1792x1024", "1024x1792", "512x512", "256x256"),
   type = c("url", "image", "file"),
   format = c("png", "jpeg", "gif"),
   path = "./",
@@ -20,9 +21,11 @@ draw_img(
 \item{prompt}{character. 이미지 생성 명령을 수행할 프롬프트.}
 
 \item{ko2en}{logical. 프롬프트가 한국어일 때, 영어로 번역하여 질의하는 여부 설정.
-TRUE이면 한글 프롬프트를 영어로 번역하여 프롬프트를 질의.}
+model이 "dall-e-2"일 경우에만 사용하며, TRUE이면 한글 프롬프트를 영어로 번역하여 프롬프트를 질의.}
 
 \item{n}{integer. 생성할 이미지의 개수. 기본값은 1이며, 1과 10 사이의 정수를 사용함.}
+
+\item{model}{character. 사용할 모델로 dall-e-3", "dall-e-2"에서 선택함.}
 
 \item{size}{character. 이미지의 크기로 "1024x1024", "256x256", "512x512"에서
 하나를 선택함. 기본값은 "1024x1024".}
@@ -52,19 +55,21 @@ openai의 이미지 생성을 위한 프롬프트를 한글로 만들 경우에�
 \examples{
 \dontrun{
 # 영어 프롬프트
-prompt_en <- "Draw a sunrise and a seagull in Vincent van Gogh style."
+prompt_en <- "Vincent van Gogh-style painting of a fishing boat and beach scene at sunrise."
+# 한글 프롬프트
+prompt_ko <- "일출을 배경으로 낚시하는 어선과 해변의 풍경의 빈센트 반 고흐 화풍으로 그려줘"
 
 #' # 생성된 파일의 경로로서의 URL 반환
-draw_img(prompt_en, ko2en = FALSE)
-
-# 한글 프롬프트
-prompt_ko <- "빈센트 반 고흐 스타일로 일출과 갈매기를 그려줘"
+draw_img(prompt_ko)
 
 # 이미지를 반환
 draw_img(prompt_ko, type = "image")
 
 # 파일로 출력
 draw_img(prompt_ko, type = "file")
+
+# 파일로 출력
+draw_img(prompt_ko, ko2en = TRUE, model = "dall-e-2", type = "file")
 }
 }
 \seealso{

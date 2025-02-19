@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bitGPT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.4.2.9000</span>
       </span>
     </div>
 
@@ -55,9 +55,10 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">draw_img</span><span class="op">(</span></span>
 <span>  <span class="va">prompt</span>,</span>
-<span>  ko2en <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ko2en <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  n <span class="op">=</span> <span class="fl">1L</span>,</span>
-<span>  size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1024x1024"</span>, <span class="st">"256x256"</span>, <span class="st">"512x512"</span><span class="op">)</span>,</span>
+<span>  model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dall-e-3"</span>, <span class="st">"dall-e-2"</span><span class="op">)</span>,</span>
+<span>  size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"1024x1024"</span>, <span class="st">"1792x1024"</span>, <span class="st">"1024x1792"</span>, <span class="st">"512x512"</span>, <span class="st">"256x256"</span><span class="op">)</span>,</span>
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"url"</span>, <span class="st">"image"</span>, <span class="st">"file"</span><span class="op">)</span>,</span>
 <span>  format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"png"</span>, <span class="st">"jpeg"</span>, <span class="st">"gif"</span><span class="op">)</span>,</span>
 <span>  path <span class="op">=</span> <span class="st">"./"</span>,</span>
@@ -74,11 +75,15 @@
 
 <dt>ko2en</dt>
 <dd><p>logical. 프롬프트가 한국어일 때, 영어로 번역하여 질의하는 여부 설정.
-TRUE이면 한글 프롬프트를 영어로 번역하여 프롬프트를 질의.</p></dd>
+model이 "dall-e-2"일 경우에만 사용하며, TRUE이면 한글 프롬프트를 영어로 번역하여 프롬프트를 질의.</p></dd>
 
 
 <dt>n</dt>
 <dd><p>integer. 생성할 이미지의 개수. 기본값은 1이며, 1과 10 사이의 정수를 사용함.</p></dd>
+
+
+<dt>model</dt>
+<dd><p>character. 사용할 모델로 dall-e-3", "dall-e-2"에서 선택함.</p></dd>
 
 
 <dt>size</dt>
@@ -125,19 +130,21 @@ type의 값이 "file"일 경우만 적용됨.</p></dd>
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="co"># 영어 프롬프트</span></span></span>
-<span class="r-in"><span><span class="va">prompt_en</span> <span class="op">&lt;-</span> <span class="st">"Draw a sunrise and a seagull in Vincent van Gogh style."</span></span></span>
+<span class="r-in"><span><span class="va">prompt_en</span> <span class="op">&lt;-</span> <span class="st">"Vincent van Gogh-style painting of a fishing boat and beach scene at sunrise."</span></span></span>
+<span class="r-in"><span><span class="co"># 한글 프롬프트</span></span></span>
+<span class="r-in"><span><span class="va">prompt_ko</span> <span class="op">&lt;-</span> <span class="st">"일출을 배경으로 낚시하는 어선과 해변의 풍경의 빈센트 반 고흐 화풍으로 그려줘"</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#' # 생성된 파일의 경로로서의 URL 반환</span></span></span>
-<span class="r-in"><span><span class="fu">draw_img</span><span class="op">(</span><span class="va">prompt_en</span>, ko2en <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># 한글 프롬프트</span></span></span>
-<span class="r-in"><span><span class="va">prompt_ko</span> <span class="op">&lt;-</span> <span class="st">"빈센트 반 고흐 스타일로 일출과 갈매기를 그려줘"</span></span></span>
+<span class="r-in"><span><span class="fu">draw_img</span><span class="op">(</span><span class="va">prompt_ko</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 이미지를 반환</span></span></span>
 <span class="r-in"><span><span class="fu">draw_img</span><span class="op">(</span><span class="va">prompt_ko</span>, type <span class="op">=</span> <span class="st">"image"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># 파일로 출력</span></span></span>
 <span class="r-in"><span><span class="fu">draw_img</span><span class="op">(</span><span class="va">prompt_ko</span>, type <span class="op">=</span> <span class="st">"file"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># 파일로 출력</span></span></span>
+<span class="r-in"><span><span class="fu">draw_img</span><span class="op">(</span><span class="va">prompt_ko</span>, ko2en <span class="op">=</span> <span class="cn">TRUE</span>, model <span class="op">=</span> <span class="st">"dall-e-2"</span>, type <span class="op">=</span> <span class="st">"file"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
@@ -153,7 +160,7 @@ type의 값이 "file"일 경우만 적용됨.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

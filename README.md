@@ -11,7 +11,7 @@ Features:
 
 - open API key를 관리 기능으로 인한 손쉬운 서비스 인터페이싱
   - OpenAI의 API key
-  - Naver 파파고의 client ID와 secret
+  - DeepL의 API key
 - OpenAI의 채팅 자동 완성
 - OpenAI의 텍스트 자동 완성
   - 한국어 프롬프트는 영어 프롬프트로 번역되어 질의하고 한글 결과 반환  
@@ -25,7 +25,7 @@ Features:
   - 이미지 변형
 - 음성의 녹취를 위한 오디오 녹음 기능  
 - OpenAI의 STT(Speech to Text)
-- Naver 파파고의 텍스트 번역기
+- DeepL의 텍스트 번역기
 
 ## Install bitGPT
 
@@ -43,11 +43,9 @@ chatGPT를 사용하기 위해서는
 3달은 18 US 달러 credit이 무료이나, 이후에는 유료임을 인지하고
 진행**하시기 바랍니다.
 
-또한 한국어 환경으로 좀 더 편안한 사용을 위해서는
-`Naver 파파고 API key`도 준비해야 합니다. [오픈 API
-이용신청](https://developers.naver.com/apps/#/register?api=ppg_n2mt)
-링크에서 `애플리케이션 등록(API 이용신청)`을 통해서 API key를 발급받아야
-합니다.
+또한 한국어 환경으로 좀 더 편안한 사용을 위해서는 `DeepL API key`도
+준비해야 합니다. [오픈 API 이용신청](https://www.deepl.com/en/pro-api)
+링크에서 `DeepL API Free`를 통해서 API key를 발급받아야 합니다.
 
 ### OpenAI API key 등록
 
@@ -77,36 +75,29 @@ regist_openai_key("XXXXXXXXXXX")
 set_openai_key("XXXXXXXXXXX")
 ```
 
-### Naver 파파고 API key 등록
+### DeepL API key 등록
 
-Naver 파파고 API key는 `client ID`와 `client secret`로 구성되어
-있습니다. OpenAI API key와 유사한 방법으로 `regist_naver_key()`를 한번
-수행하여 등록하거나, `set_naver_key()`로 세션 내에서 설정합니다.
+DeepL API key는 OpenAI API key와 유사한 방법으로 `regist_deepl_key()`를
+한번 수행하여 등록하거나, `set_deepl_key()`로 세션 내에서 설정합니다.
 
 ``` r
-# 실제 사용자가 할당받은 Naver API key로 등록합니다.
-regist_naver_key(client_id = "XXXXXXXXXXX", client_secret = "XXXXXXXXXXX")
+# 실제 사용자가 할당받은 DeepL API key로 등록합니다.
+regist_deepl_key("XXXXXXXXXXX")
 ```
 
 ``` r
-# 실제 사용자가 할당받은 Naver API key로 설정합니다.
-set_naver_key(client_id = "XXXXXXXXXXX", client_secret = "XXXXXXXXXXX")
+# 실제 사용자가 할당받은 DeepL API key로 설정합니다.
+set_deepl_key("XXXXXXXXXXX")
 ```
 
 ## Laguage translation
 
-### 파파고 번역
+### DeepL 번역
 
-`translate()`는 파파고 번역을 수행합니다.
+`translate()`는 DeepL 번역을 수행합니다.
 
 ``` r
-translate(
-  text = NULL,
-  source = "ko",
-  target = "en",
-  client_id = Sys.getenv("NAVER_CLIENT_ID"),
-  client_secret = Sys.getenv("NAVER_CLIENT_SECRET")
-)
+translate(text = NULL, target = "EN", source = "KO", deepl_api_key = Sys.getenv("DEEPL_API_KEY"))
 ```
 
 - text
@@ -117,21 +108,19 @@ translate(
 - target
   - character. 번역될 언어의 언어 코드입니다. 기본값은 “en”로 영어로
     번역합니다.
-- client_id
-  - character. Naver 파파고 API key의 client ID입니다.
-- client_secret
-  - character. Naver 파파고 API key의 client Secret입니다.
+- deepl_api_key
+  - character. DeepL API key입니다.
 
 몇 개 문장을 번역해 봅니다.
 
 ``` r
 text <- "빈센트 반 고흐 스타일로 일출과 갈매기를 그려줘"
 translate(text)
-#> [1] "Vincent van Gogh style, please draw sunrise and seagulls"
+#> [1] "Draw a sunrise and seagulls in the style of Vincent van Gogh"
 
 text <- "We’ve trained a model called ChatGPT which interacts in a conversational way. The dialogue format makes it possible for ChatGPT to answer followup questions, admit its mistakes, challenge incorrect premises, and reject inappropriate requests."
-translate(text, "en", "ko")
-#> [1] "우리는 대화 방식으로 상호 작용하는 ChatGPT이라는 모델을 훈련시켰다. 대화 형식을 통해 ChatGPT는 후속 질문에 답변하고, 실수를 인정하고, 잘못된 전제에 도전하고, 부적절한 요청을 거부할 수 있습니다."
+translate(text, "KO", "EN")
+#> [1] "저희는 대화 방식으로 상호 작용하는 ChatGPT라는 모델을 학습시켰습니다. 대화 형식을 통해 ChatGPT는 후속 질문에 답하고, 실수를 인정하고, 잘못된 전제에 이의를 제기하고, 부적절한 요청을 거부할 수 있습니다."
 ```
 
 ## Chat completion
@@ -148,22 +137,10 @@ translate(text, "en", "ko")
 있습니다.
 
 ``` r
-chat_completion(
-  messages = NULL,
-  model = c("gpt-3.5-turbo", "gpt-3.5-turbo-0301"),
-  temperature = 1,
-  top_p = 1,
-  n = 1,
-  stream = FALSE,
-  stop = NULL,
-  max_tokens = NULL,
-  presence_penalty = 0,
-  frequency_penalty = 0,
-  logit_bias = NULL,
-  user = NULL,
-  type = c("messages", "console", "viewer"),
-  openai_api_key = Sys.getenv("OPENAI_API_KEY")
-)
+chat_completion(messages = NULL, model = c("gpt-3.5-turbo", "gpt-3.5-turbo-0301"),
+    temperature = 1, top_p = 1, n = 1, stream = FALSE, stop = NULL, max_tokens = NULL,
+    presence_penalty = 0, frequency_penalty = 0, logit_bias = NULL, user = NULL,
+    type = c("messages", "console", "viewer"), openai_api_key = Sys.getenv("OPENAI_API_KEY"))
 ```
 
 - messages
@@ -514,17 +491,9 @@ R을 이용한 통계학 커리큘럼입니다.
 있습니다.
 
 ``` r
-draw_img(
-  prompt,
-  ko2en = TRUE,
-  n = 1L,
-  size = c("1024x1024", "256x256", "512x512"),
-  type = c("url", "image", "file"),
-  format = c("png", "jpeg", "gif"),
-  path = "./",
-  fname = "aidrawing",
-  openai_api_key = Sys.getenv("OPENAI_API_KEY")
-)
+draw_img(prompt, ko2en = TRUE, n = 1L, size = c("1024x1024", "256x256",
+    "512x512"), type = c("url", "image", "file"), format = c("png", "jpeg",
+    "gif"), path = "./", fname = "aidrawing", openai_api_key = Sys.getenv("OPENAI_API_KEY"))
 ```
 
 - prompt
@@ -610,19 +579,9 @@ alt="고흐풍 드로잉" />
 부분의 편집 내용을 기술합니다.
 
 ``` r
-draw_img_edit(
-  image,
-  mask,
-  prompt,
-  ko2en = TRUE,
-  n = 1L,
-  size = c("1024x1024", "256x256", "512x512"),
-  type = c("url", "image", "file"),
-  format = c("png", "jpeg", "gif"),
-  path = "./",
-  fname = "aiedit",
-  openai_api_key = Sys.getenv("OPENAI_API_KEY")
-)
+draw_img_edit(image, mask, prompt, ko2en = TRUE, n = 1L, size = c("1024x1024",
+    "256x256", "512x512"), type = c("url", "image", "file"), format = c("png",
+    "jpeg", "gif"), path = "./", fname = "aiedit", openai_api_key = Sys.getenv("OPENAI_API_KEY"))
 ```
 
 - image
@@ -715,16 +674,9 @@ alt="편집된 이미지" />
 됩니다.
 
 ``` r
-draw_img_variation(
-  image,
-  n = 1L,
-  size = c("1024x1024", "256x256", "512x512"),
-  type = c("url", "image", "file"),
-  format = c("png", "jpeg", "gif"),
-  path = "./",
-  fname = "aivariation",
-  openai_api_key = Sys.getenv("OPENAI_API_KEY")
-)
+draw_img_variation(image, n = 1L, size = c("1024x1024", "256x256", "512x512"),
+    type = c("url", "image", "file"), format = c("png", "jpeg", "gif"),
+    path = "./", fname = "aivariation", openai_api_key = Sys.getenv("OPENAI_API_KEY"))
 ```
 
 앞에서 소개한 “cloud.png” 이미지 파일을 변형해 보겠습니다.
@@ -752,11 +704,7 @@ alt="변형된 이미지" />
 여러분은 `transcript_audio()`로 STT를 수행할 수 있습니다.
 
 ``` r
-transcript_audio(
-  file,
-  language = "ko",
-  openai_api_key = Sys.getenv("OPENAI_API_KEY")
-)
+transcript_audio(file, language = "ko", openai_api_key = Sys.getenv("OPENAI_API_KEY"))
 ```
 
 - file
@@ -770,7 +718,7 @@ transcript_audio(
     `sett_openai_key()`로 API key를 설정했다면 이 인수값을 지정할
     필요없습니다.
 
-`bitGPT` 패키지에는 “korea_r\_user.m4a” 파일을 제공하고 있습니다. 이
+`bitGPT` 패키지에는 “korea_r_user.m4a” 파일을 제공하고 있습니다. 이
 파일은 `한국R사용자회` 소개하는 짧은 음성파일입니다. 성능이 좋지 않는
 스피치의 텍스트 전환의 성능을 판단하기 위해서, 스피치의 성능은 높지 않게
 생성했습니다. 잘못 발음하여 다시 발음하거나, 문장내에서 띄어 읽는 부분이
@@ -785,11 +733,11 @@ transcript_audio(speech)
 ```
 
 ``` r
-text 
+text
 "사단법인 한국R 사용자예는 디지털 분평 등 해소와 통계 대중화를 위해 2020년 설립되었습니다. 
 오픈 통계 패키지 개발을 비롯하여 최근에 통계 및 데이터 과학 관련 오픈 전자책도 함께 제작하여 발간하고 있습니다. 
 통계 패키지와 통계 및 데이터 과학 책은 사용자의 회원들의 자발적인 참여로 개발 및 유지 보수되고 있습니다. 
-데이터 과학 분야의 인공지능 ai 체질 비트와 공존을 본격적으로 탐색하기 시작했습니다." 
+데이터 과학 분야의 인공지능 ai 체질 비트와 공존을 본격적으로 탐색하기 시작했습니다."
 ```
 
 스피치의 대상이 되는 원문 문장은 다음과 같습니다.

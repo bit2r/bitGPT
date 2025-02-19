@@ -7,13 +7,12 @@
 get_api_key()
 }
 \description{
-패키지 파일에 등록된 openai API key와 Naver API key를 조회합니다.
+패키지 파일에 등록된 openai API key와 DeepL API key를 조회합니다.
 }
 \details{
-regist_openai_key(), regist_naver_key()를 사용하지 않고, set_api_key(),
-set_naver_key()로 API key를 설정한 경우라면, get_api_key() 대신에
-Sys.getenv("OPENAI_API_KEY"), Sys.getenv("NAVER_CLIENT_ID"),
-Sys.getenv("NAVER_CLIENT_SECRET")를 사용하세요.
+regist_openai_key(), regist_deepl_key()를 사용하지 않고, set_api_key(),
+set_deepl_key()로 API key를 설정한 경우라면, get_api_key() 대신에
+Sys.getenv("OPENAI_API_KEY"), Sys.getenv("DEEPL_API_KEY")를 사용하세요.
 }
 \examples{
 \dontrun{
