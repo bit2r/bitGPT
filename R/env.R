@@ -63,6 +63,10 @@ get_api_key <- function() {
 #' }
 #' @export
 set_openai_key <- function(api_key = NULL) {
+  if (is.null(api_key)) {
+    stop("OpanAI API key is required.")
+  }
+
   Sys.setenv(
     OPENAI_API_KEY = api_key
   )
@@ -81,6 +85,9 @@ set_openai_key <- function(api_key = NULL) {
 #' }
 #' @export
 set_deepl_key <- function(api_key = NULL) {
+  if (is.null(api_key)) {
+    stop("DeepL API key is required.")
+  }
   Sys.setenv(
     DEEPL_API_KEY = api_key
   )
@@ -101,6 +108,10 @@ set_deepl_key <- function(api_key = NULL) {
 #' @import dplyr
 #' @importFrom base64enc base64encode
 regist_openai_key <- function(api_key = NULL) {
+  if (is.null(api_key)) {
+    stop("OpanAI API key is required.")
+  }
+
   key_file <- file.path(system.file(package = "bitGPT"), ".openapiKey")
 
   decode_api_key <- api_key %>%
@@ -136,6 +147,10 @@ regist_openai_key <- function(api_key = NULL) {
 #' @import dplyr
 #' @importFrom base64enc base64encode
 regist_deepl_key <- function(api_key = NULL) {
+  if (is.null(api_key)) {
+    stop("DeepL API key is required.")
+  }
+
   key_file <- file.path(system.file(package = "bitGPT"), ".deeplKey")
 
   decode_api_key <- api_key %>%
